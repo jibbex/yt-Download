@@ -16,7 +16,7 @@ npm config set yt-download:directory /path/to/project/
 npm install
 ```
 
-### Starting ytDownload
+### Starting yt-Download
 To start the release version enter ``npm start`` and ``npm test`` for the debug version with active Chrome Developer Mode.
 
 
@@ -41,7 +41,7 @@ npm install electron-builder --save-dev
 #### Create Package
 To build binaries for Windows just enter ``npm run package-win``.
 
-#### Building ytDownload and create NSIS Installer
+#### Building yt-Download and create NSIS Installer
 To compile binaries and create an installer, you must enter ``npm run installer-win`` in the console.
 
 #### Please notice, the code is not signed
