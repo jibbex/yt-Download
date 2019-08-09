@@ -12,49 +12,49 @@ let settings;
  * @param {object} list item
  */
 const ListItem = function(item) {
-	try {
-		this.index = vList.length;
-		this.element = document.createElement('li');
-		this.item = item;
-		this.rmButton = document.createElement('button');
-		let title = document.createTextNode(item.title);
-		let thumb = document.createElement('img');
-		let rmIcon = document.createElement('li');
+  try {
+    this.index = vList.length;
+    this.element = document.createElement('li');
+    this.item = item;
+    this.rmButton = document.createElement('button');
+    let title = document.createTextNode(item.title);
+    let thumb = document.createElement('img');
+    let rmIcon = document.createElement('li');
 
-		this.element.id = item.id;
+    this.element.id = item.id;
 
-		thumb.src = item.thumbnail;
+    thumb.src = item.thumbnail;
 
-		rmIcon.classList.add('fas');
-		rmIcon.classList.add('fa-minus');
+    rmIcon.classList.add('fas');
+    rmIcon.classList.add('fa-minus');
 
-		this.rmButton.classList.add('rm');
-		this.rmButton.title = 'remove';
-		this.rmButton.appendChild(rmIcon);
+    this.rmButton.classList.add('rm');
+    this.rmButton.title = 'remove';
+    this.rmButton.appendChild(rmIcon);
 
-		this.rmButton.addEventListener('click', (el) => {
-			try {
-				this.parent.removeChild(vList[this.index].element);
-				vList.splice(this.index, 1);
-				for(let i = this.index; i < vList.length; i++) {
-					vList[i].index = vList[i].index - 1;
-				}
-			} catch(err) {
-				console.log(err);
-				dialog.showErrorBox('Error', 'Could not remove item');
-			}
-		});
+    this.rmButton.addEventListener('click', (el) => {
+      try {
+        this.parent.removeChild(vList[this.index].element);
+        vList.splice(this.index, 1);
+        for(let i = this.index; i < vList.length; i++) {
+          vList[i].index = vList[i].index - 1;
+        }
+      } catch(err) {
+        console.log(err);
+        dialog.showErrorBox('Error', 'Could not remove item');
+      }
+    });
 
-		this.element.appendChild(thumb);
-		this.element.appendChild(title);
-		this.element.appendChild(this.rmButton);
+    this.element.appendChild(thumb);
+    this.element.appendChild(title);
+    this.element.appendChild(this.rmButton);
 
-		this.parent.appendChild(this.element);
+    this.parent.appendChild(this.element);
 
-	}
-	catch(err) {
-		dialog.showErrorBox('Error', 'ListItem initialisation failed');
-	}
+  }
+  catch(err) {
+    dialog.showErrorBox('Error', 'ListItem initialisation failed');
+  }
 }
 
 ListItem.prototype.parent = document.querySelector('#main-container > ul');
