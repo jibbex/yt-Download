@@ -81,12 +81,12 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: settings.wSize.width,
     height: settings.wSize.height,
-		minWidth: 400,
-		minHeight: 600,
+    minWidth: 400,
+    minHeight: 600,
     icon: path.join(__dirname + '/../assets/images/ico.png'),
     webPreferences: {
       nodeIntegration: true,
-			nodeIntegrationInWorker: true
+      nodeIntegrationInWorker: true
     }
   });
 
