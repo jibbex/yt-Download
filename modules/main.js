@@ -90,9 +90,9 @@ const createWindow = async () => {
     }
   });
 
-	if(DEV) mainWindow.openDevTools();
+  if(DEV) mainWindow.openDevTools();
 
-	mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile(path.join(__dirname + '/../assets/index.html'));
 
@@ -104,15 +104,14 @@ const createWindow = async () => {
 	 */
 	mainWindow.on('close', async () => {
 		const size = mainWindow.getSize();
-
-		try {
+    try {
       settings.wSize.width = size[0];
-  		settings.wSize.height = size[1];
-			await saveConfig(settings);
-		}
-		catch(err) {
-			throw err;
-		}
+      settings.wSize.height = size[1];
+      await saveConfig(settings);
+    }
+    catch(err) {
+      throw err;
+    }
 	});
 	/**
 	 * Content loaded
@@ -120,9 +119,9 @@ const createWindow = async () => {
 	 * @param {string} event
 	 * @param {function} callback
 	 */
-	mainWindow.webContents.on('did-finish-load', function() {
-		mainWindow.webContents.send('init', settings);
-	});
+  mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.webContents.send('init', settings);
+  });
 
   mainWindow.on('closed', function() {
     mainWindow = null
@@ -144,20 +143,20 @@ app.on('activate', function () {
  *
  */
 ipcMain.on('download', (event, arg) => {
-	index = 0;
-	urls = arg;
+  index = 0;
+  urls = arg;
 
-	download(urls[index]);
+  download(urls[index]);
 });
 
 ipcMain.on('save', async (event, arg) => {
-	if(arg.cmd == 'dir') {
-		settings.folder = arg.dir;
-	}
+  if(arg.cmd == 'dir') {
+    settings.folder = arg.dir;
+  }
 
   try {
     const saved = await saveConfig(settings);
-    event.sender.send('init', saved)
+    event.sender.send('init', saved);
   }
   catch(err) {
     throw err;
