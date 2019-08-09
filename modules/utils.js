@@ -63,6 +63,6 @@ exports.saveConfig = (conf) => {
       else {
         resolve(conf);
       }
-  	});
+    });
   })
 }
