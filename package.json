@@ -1,0 +1,54 @@
+{
+  "name": "yt-download",
+  "version": "0.7.4",
+  "description": "Downloads videos from Youtube",
+  "productName": "ytDownload",
+  "main": "modules/main.js",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Manfred Michaelis",
+    "email": "mm@michm.de",
+    "url": "https://ytdl.michm.de"
+  },
+  "config": {
+    "directory": "/home/mm/Projekte/ytDownload-0.7.4",
+    "arch": "x64"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "SET DEV=true && electron .",
+    "installer-win": "./node_modules/.bin/electron-builder build --project %npm_package_config_directory%",
+    "package-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=%npm_package_config_arch% --prune=true --out=%npm_package_config_directory%/dist --version-string.CompanyName=\"%npm_package_author_name%\" --version-string.FileDescription=\"%npm_package_description%\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"%npm_package_productName%\" ",
+    "package-deb": "electron-packager . yt-download --overwrite --platform linux --arch $npm_package_config_arch --prune=true --icon=./assets/images/ico512.png --asar=true --out ./dist && chmod 755 -R ./dist/yt-download-linux-x64",
+    "wPackage-deb": "electron-packager . yt-download --overwrite --platform linux --arch %npm_package_config_arch% --prune=true --icon=assets/images/ico512.png --asar=true --out %npm_package_config_directory%/dist",
+    "lPackage-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=$npm_package_config_arch --prune=true --out=$npm_package_config_directory/dist --version-string.CompanyName=\"$npm_package_author_name\" --version-string.FileDescription=\"$npm_package_description\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"$npm_package_productName\" ",
+    "installer-deb": "cd ./modules/installer && node debian.js"
+  },
+  "devDependencies": {
+    "electron": "^5.0.8",
+    "electron-packager": "^14.0.4"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "ytdl-core": "^0.29.4"
+  },
+  "build": {
+    "appId": "de.michm.ytdownload",
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "createStartMenuShortcut": true,
+      "createDesktopShortcut": false,
+      "menuCategory": "ytDownload",
+      "uninstallerIcon": "assets/images/icon.ico",
+      "installerHeaderIcon": "assets/images/icon.ico",
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true
+    },
+    "win": {
+      "icon": "assets/images/icon.ico",
+      "target": "NSIS"
+    }
+  }
+}

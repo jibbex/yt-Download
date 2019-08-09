@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ytDownload</title>
+  </head>
+  <body>
+		<div id="download-container" class="active container">
+	    <div id="input-container">
+				<input type="text" id="url">
+				<button id="paste"><i class="fa fa-lg fa-paste"></i></button>
+				<button id="add"><i class="fa fa-lg fa-plus"></i></button>
+			</div>
+			<div id="main-container">
+				<ul>
+				</ul>
+				<div id="loading">
+					<i class="fa fa-lg fa-spinner fa-pulse fa-3x fa-fw"></i>
+				</div>
+			</div>
+			<div id="status-container">
+				<button id="download"><i class="fa fa-lg fa-download"></i></button>
+				<progress max="100" value="0"></progress>
+				<div id="button-container">
+					<button id="info"><i class="fa fa-lg fa-info-circle"></i></button>
+					<button id="settings"><i class="fa fa-lg fa-cog"></i></button>
+				</div>
+			</div>
+		</div>
+		<div id="settings-container" class="container">
+			<button id="close-settings"><i class="fa fa-lg fa-times"></i></button>
+			<div class="note">
+				<label class="headline">Download Directory</label>
+				<label id="label-dir">PATH</label>
+				<button id="select-dir" class="float-right"><i class="fa fa-lw fa-file"></i> Directory</button>
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div id="info-container" class="container">
+			<button id="close-info"><i class="fa fa-lg fa-times"></i></button>
+			<image src="images/icon.png" class="img" alt="icon">
+			<div class="note first-note">
+			<h2>ytDownload <span id="version"></span></h2>
+	      <p>
+	        <span id="description"></span>
+	      </p>
+			</div>
+			<div class="note">
+            <span class="copy float-right"><i class="fa fa-lg fa-copyright"></i></span>
+            <span class="bold">Copyright &copy; <span id="copyY">2017</span>, Manfred Michaelis</span>
+            <p>
+              Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+              files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+              publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+              subject to the following conditions:
+            </p>
+            <p>
+              The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+            </p>
+            <p>
+              THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+              FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+              WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </p>
+          </div>
+		</div>
+    <link rel="stylesheet" href="./../node_modules/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/style.css">
+    <script>
+      require('../modules/renderer.js');
+    </script>
+  </body>
+</html>
