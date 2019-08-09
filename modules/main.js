@@ -20,56 +20,55 @@ let mainWindow;
  * @param {string} url
  */
 function download(url) {
-	try {
-		let starttime;
-		const title = removeSpecials(url.title);
+  try {
+    let starttime;
+    const title = removeSpecials(url.title);
 
+    ytdl.getInfo(url.url, (err, info) => {
 
-		ytdl.getInfo(url.url, (err, info) => {
+      let video = ytdl(url.url, { quality: 'highest'});
 
-			let video = ytdl(url.url, { quality: 'highest'});
+      video.pipe(fs.createWriteStream(path.join(`${settings.folder}/${title}.mp4`)));
 
-			video.pipe(fs.createWriteStream(path.join(`${settings.folder}/${title}.mp4`)));
+      video.once('response', () => {
+        starttime = Date.now();
+      });
 
-			video.once('response', () => {
-		  	starttime = Date.now();
-			});
+      video.on('progress', (chunkLength, downloaded, total) => {
+        const percent = downloaded / total;
+        const downloadedMinutes = (Date.now() - starttime) / 1000 / 60;
 
-			video.on('progress', (chunkLength, downloaded, total) => {
-			  const percent = downloaded / total;
-			  const downloadedMinutes = (Date.now() - starttime) / 1000 / 60;
+        mainWindow.setProgressBar(percent);
+        mainWindow.webContents.send('progress', {percent: (percent * 100).toFixed(2)});
+      });
 
-				mainWindow.setProgressBar(percent);
-				mainWindow.webContents.send('progress', {percent: (percent * 100).toFixed(2)});
-			});
+      video.on('end', () => {
 
-			video.on('end', () => {
+        mainWindow.webContents.send('finished', index);
 
-				mainWindow.webContents.send('finished', index);
+        index = index + 1;
 
-				index = index + 1;
+        if(index >= urls.length) {
+          index = 0;
+          urls = [];
+          mainWindow.setProgressBar(0);
+          return;
+        }
+        download(urls[index]);
+      });
 
-				if(index >= urls.length) {
-					index = 0;
-					urls = [];
-					mainWindow.setProgressBar(0);
-					return;
-				}
-				download(urls[index]);
-			});
-
-			video.on('error', (err) => {
-				console.log(err);
-				mainWindow.setProgressBar(0);
-				mainWindow.webContents.send('error', err);
-			});
-		});
-	}
-	catch(err) {
-		console.log(err);
-		mainWindow.setProgressBar(0);
-		mainWindow.webContents.send('error', err);
-	}
+      video.on('error', (err) => {
+        console.log(err);
+        mainWindow.setProgressBar(0);
+        mainWindow.webContents.send('error', err);
+      });
+    });
+  }
+  catch(err) {
+    console.log(err);
+    mainWindow.setProgressBar(0);
+    mainWindow.webContents.send('error', err);
+  }
 }
 
 /**
