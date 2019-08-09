@@ -103,7 +103,7 @@ const createWindow = async () => {
    * @param {function} callback
    */
   mainWindow.on('close', async () => {
-	  const size = mainWindow.getSize();
+    const size = mainWindow.getSize();
     try {
       settings.wSize.width = size[0];
       settings.wSize.height = size[1];
