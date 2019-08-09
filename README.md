@@ -1,4 +1,4 @@
-<img src="https://github.com/jibbex/yt-Download/blob/master/assets/images/ico.png" align="right">
+<img src="https://github.com/jibbex/yt-Download/blob/master/assets/images/ico.png" align="right" width="164" height="164">
 
 # yt-Download 
 
