@@ -112,7 +112,7 @@ const createWindow = async () => {
     catch(err) {
       throw err;
     }
-	});
+  });
   /**
    * Content loaded
    *
