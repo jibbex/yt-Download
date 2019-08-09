@@ -113,12 +113,12 @@ const createWindow = async () => {
       throw err;
     }
 	});
-	/**
-	 * Content loaded
-	 *
-	 * @param {string} event
-	 * @param {function} callback
-	 */
+  /**
+   * Content loaded
+   *
+   * @param {string} event
+   * @param {function} callback
+   */
   mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.webContents.send('init', settings);
   });
