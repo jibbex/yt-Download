@@ -96,14 +96,14 @@ const createWindow = async () => {
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile(path.join(__dirname + '/../assets/index.html'));
 
-	/**
-	 * Handles window close
-	 *
-	 * @param {string} event
-	 * @param {function} callback
-	 */
-	mainWindow.on('close', async () => {
-		const size = mainWindow.getSize();
+  /**
+   * Handles window close
+   *
+   * @param {string} event
+   * @param {function} callback
+   */
+  mainWindow.on('close', async () => {
+	  const size = mainWindow.getSize();
     try {
       settings.wSize.width = size[0];
       settings.wSize.height = size[1];
