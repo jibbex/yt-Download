@@ -25,8 +25,10 @@ const ListItem = function(item) {
 
     thumb.src = item.thumbnail;
 
-    rmIcon.classList.add('fas');
-    rmIcon.classList.add('fa-minus');
+    rmIcon.classList.add('fa', 'fa-lg', 'fa-minus');
+    rmIcon.style.border = 'none';
+    rmIcon.style.height = 'auto';
+    rmIcon.style.background = 'none';
 
     this.rmButton.classList.add('rm');
     this.rmButton.title = 'remove';
