@@ -149,7 +149,7 @@ document.getElementById('select-dir').addEventListener('click', async () => {
   }
   catch(err) {
     console.error(err);
-    dialog.showErrorBox('Error', 'Directory coult not select.');
+    dialog.showErrorBox('Error', 'Directory could not be selected.');
   }
 });
 
