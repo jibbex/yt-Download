@@ -14,6 +14,9 @@ let index = 0;
 let settings;
 let mainWindow;
 
+if(process.platform === 'win32')
+  app.setAppUserModelId('de.michm.yt-download');
+
 /**
  * Downloads a video
  *
