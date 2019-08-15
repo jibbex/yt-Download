@@ -138,12 +138,18 @@ document.getElementById('info').addEventListener('click', () => {
 document.getElementById('close-settings').addEventListener('click', closeContainer);
 document.getElementById('close-info').addEventListener('click', closeContainer);
 
-document.getElementById('select-dir').addEventListener('click', () => {
-  let dir = dialog.showOpenDialog({defaultPath : settings.folder, properties:["openDirectory"]});
+document.getElementById('select-dir').addEventListener('click', async () => {
+  try {
+    const dir = await dialog.showOpenDialog({defaultPath : settings.folder, properties:["openDirectory"]});
 
-  if(dir !== undefined) {
-    arg = {cmd: 'dir', dir: dir[0]}
-    ipcRenderer.send('save', arg);
+    if(!dir.canceled) {
+      arg = {cmd: 'dir', dir: dir.filePaths[0]}
+      ipcRenderer.send('save', arg);
+    }
+  }
+  catch(err) {
+    console.error(err);
+    dialog.showErrorBox('Error', 'Directory coult not select.');
   }
 });
 
