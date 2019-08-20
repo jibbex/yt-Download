@@ -86,6 +86,9 @@ const createWindow = async () => {
     height: settings.wSize.height,
     minWidth: 400,
     minHeight: 600,
+    show: false,
+    center: true,
+    nativeWindowOpen: true,
     icon: path.join(__dirname + '/../assets/images/ico.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -116,6 +119,7 @@ const createWindow = async () => {
       throw err;
     }
   });
+  
   /**
    * Content loaded
    *
@@ -125,7 +129,23 @@ const createWindow = async () => {
   mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.webContents.send('init', settings);
   });
-
+  
+  /**
+	 * Window ready
+	 *
+	 * @param {string} event
+	 * @param {function} callback
+	 */
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+  
+  /**
+	 * On closed event
+	 *
+	 * @param {string} event
+	 * @param {function} callback
+	 */
   mainWindow.on('closed', function() {
     mainWindow = null
   })
