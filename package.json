@@ -1,6 +1,6 @@
 {
   "name": "yt-download",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Downloads videos from Youtube",
   "productName": "YT Download",
   "main": "modules/main.js",
@@ -26,12 +26,12 @@
     "installer-deb": "cd ./modules/installer && node debian.js"
   },
   "devDependencies": {
-    "electron": "^6.0.2",
-    "electron-packager": "^14.0.4"
+    "electron": "^6.0.8",
+    "electron-packager": "^14.0.6"
   },
   "dependencies": {
     "font-awesome": "^4.7.0",
-    "ytdl-core": "^0.29.5"
+    "ytdl-core": "^0.29.7"
   },
   "build": {
     "appId": "de.michm.yt-download",
