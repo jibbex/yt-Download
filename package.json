@@ -1,6 +1,6 @@
 {
   "name": "yt-download",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Downloads videos from Youtube",
   "productName": "YT Download",
   "main": "modules/main.js",
@@ -12,7 +12,7 @@
     "url": "https://ytdl.michm.de"
   },
   "config": {
-    "directory": "/home/mm/Projekte/ytDownload",
+    "directory": "D:\\Users\\m_mic\\Data\\Projekte\\ytDownload",
     "arch": "x64"
   },
   "scripts": {
@@ -22,16 +22,17 @@
     "package-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=%npm_package_config_arch% --prune=true --out=%npm_package_config_directory%/dist --version-string.CompanyName=\"%npm_package_author_name%\" --version-string.FileDescription=\"%npm_package_description%\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"%npm_package_productName%\" ",
     "package-deb": "electron-packager . yt-download --overwrite --platform linux --arch $npm_package_config_arch --prune=true --icon=./assets/images/ico512.png --asar=true --out ./dist && chmod 755 -R ./dist/yt-download-linux-x64",
     "wPackage-deb": "electron-packager . yt-download --overwrite --platform linux --arch %npm_package_config_arch% --prune=true --icon=assets/images/ico512.png --asar=true --out %npm_package_config_directory%/dist",
-    "lPackage-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=$npm_package_config_arch --prune=true --out=$npm_package_config_directory/dist --version-string.CompanyName=\"$npm_package_author_name\" --version-string.FileDescription=\"$npm_package_description\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"$npm_package_productName\" ",
+    "lPackage-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=%npm_package_config_arch% --prune=true --out=%npm_package_config_directory/dist% --version-string.CompanyName=\"$npm_package_author_name\" --version-string.FileDescription=\"$npm_package_description\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"$npm_package_productName\" ",
     "installer-deb": "cd ./modules/installer && node debian.js"
   },
   "devDependencies": {
-    "electron": "^6.0.8",
-    "electron-packager": "^14.0.6"
+    "electron": "^6.1.7",
+    "electron-builder": "^21.2.0",
+    "electron-packager": "^14.2.0"
   },
   "dependencies": {
     "font-awesome": "^4.7.0",
-    "ytdl-core": "^0.29.7"
+    "ytdl-core": "^1.0.7"
   },
   "build": {
     "appId": "de.michm.yt-download",
@@ -40,7 +41,7 @@
       "perMachine": false,
       "createStartMenuShortcut": true,
       "createDesktopShortcut": false,
-      "menuCategory": "YT Download",
+      "menuCategory": "ytDownload",
       "uninstallerIcon": "assets/images/icon.ico",
       "installerHeaderIcon": "assets/images/icon.ico",
       "allowToChangeInstallationDirectory": true,
