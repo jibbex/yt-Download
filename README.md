@@ -22,7 +22,6 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 * Downloading from Youtube in HD quality if possible
 * Converting to MP3, MKV, WEBM, MOV and MPEG
 * Select quality of the download
-* Checks for available updates and notifies you
 * Easy package and installer building with [Electron Forge](https://github.com/electron-userland/electron-forge)
 
 ---
