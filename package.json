@@ -1,55 +1,83 @@
 {
   "name": "yt-download",
-  "version": "0.8.2",
-  "description": "Downloads videos from Youtube",
   "productName": "YT Download",
-  "main": "modules/main.js",
-  "private": true,
-  "license": "MIT",
+  "version": "1.0.0",
+  "description": "Downloads videos from Youtube",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "electron-forge start -- dev",
+    "package": "electron-forge package",
+    "make": "electron-forge make -- arch x86",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
   "author": {
     "name": "Manfred Michaelis",
-    "email": "mm@michm.de",
-    "url": "https://ytdl.michm.de"
+    "email": "mm@michm.de"
   },
+  "license": "MIT",
   "config": {
-    "directory": "D:\\Users\\m_mic\\Data\\Projekte\\ytDownload",
-    "arch": "x64"
-  },
-  "scripts": {
-    "start": "electron .",
-    "test": "SET DEV=true && electron .",
-    "installer-win": "./node_modules/.bin/electron-builder build --project %npm_package_config_directory%",
-    "package-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=%npm_package_config_arch% --prune=true --out=%npm_package_config_directory%/dist --version-string.CompanyName=\"%npm_package_author_name%\" --version-string.FileDescription=\"%npm_package_description%\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"%npm_package_productName%\" ",
-    "package-deb": "electron-packager . yt-download --overwrite --platform linux --arch $npm_package_config_arch --prune=true --icon=./assets/images/ico512.png --asar=true --out ./dist && chmod 755 -R ./dist/yt-download-linux-x64",
-    "wPackage-deb": "electron-packager . yt-download --overwrite --platform linux --arch %npm_package_config_arch% --prune=true --icon=assets/images/ico512.png --asar=true --out %npm_package_config_directory%/dist",
-    "lPackage-win": "electron-packager . yt-download --overwrite --asar=true --platform=win32 --icon=assets/images/icon.ico --arch=%npm_package_config_arch% --prune=true --out=%npm_package_config_directory/dist% --version-string.CompanyName=\"$npm_package_author_name\" --version-string.FileDescription=\"$npm_package_description\" --version-string.LegalCopyright=\"Manfred Michaelis\" --version-string.ProductName=\"$npm_package_productName\" ",
-    "installer-deb": "cd ./modules/installer && node debian.js"
-  },
-  "devDependencies": {
-    "electron": "^6.1.7",
-    "electron-builder": "^21.2.0",
-    "electron-packager": "^14.2.0"
+    "forge": {
+      "packagerConfig": {
+        "asar": false,
+        "icon": "./assets/images/icon.png"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "yt-download",
+            "iconUrl": "file:///D:/Users/m_mic/Data/Projekte/yt-Download_v1.0/yt-download/assets/images/icon.ico",
+            "setupIcon": "./assets/images/icon.ico",
+            "loadingGif": "./assets/images/install.gif"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "linux",
+            "win32"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   },
   "dependencies": {
-    "font-awesome": "^4.7.0",
-    "ytdl-core": "^1.0.7"
+    "animate.css": "^3.7.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "ffbinaries": "^1.1.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^1.0.5"
   },
-  "build": {
-    "appId": "de.michm.yt-download",
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "createStartMenuShortcut": true,
-      "createDesktopShortcut": false,
-      "menuCategory": "ytDownload",
-      "uninstallerIcon": "assets/images/icon.ico",
-      "installerHeaderIcon": "assets/images/icon.ico",
-      "allowToChangeInstallationDirectory": true,
-      "allowElevation": true
-    },
-    "win": {
-      "icon": "assets/images/icon.ico",
-      "target": "NSIS"
-    }
+  "devDependencies": {
+    "@electron-forge/cli": "6.0.0-beta.43",
+    "@electron-forge/maker-deb": "6.0.0-beta.43",
+    "@electron-forge/maker-rpm": "6.0.0-beta.43",
+    "@electron-forge/maker-squirrel": "6.0.0-beta.43",
+    "@electron-forge/maker-zip": "6.0.0-beta.43",
+    "electron": "6.0.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
