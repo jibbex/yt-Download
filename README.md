@@ -1,74 +1,74 @@
 <img src="https://github.com/jibbex/yt-Download/blob/master/assets/images/ico.png" align="right" width="164" height="164">
 
-# yt-Download 
+# YT Download
 
-*Downloads videos from Youtube.* 
+*Downloads videos from Youtube.*
 
 Pre-compiled builds and more information can be found at [ytdl.michm.de](https://ytdl.michm.de).
 
 ### Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
 
+
+### FFmpeg
+*[FFmpeg](https://www.ffmpeg.org/) is required to download HD quality videos and convert files. YT Download also works with limited functionality without FFmpeg.*
+
+**if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
+
+
+### New Features in 1.0.0
+
+* New UI build on [Materialize](https://materializecss.com/) framework
+* Downloading from Youtube in HD quality if possible
+* Converting to MP3, MKV, WEBM, MOV and MPEG
+* Select quality of the download
+* Checks for available updates and notifies you
+* Easy package and installer building with [Electron Forge](https://github.com/electron-userland/electron-forge)
+
 ---
-### Initialize
+#### Initialize
 ```
-npm config set yt-download:directory /path/to/project/
 npm install
 ```
-
-### Starting yt-Download
-To start the release version enter ``npm start`` and ``npm test`` for the debug version with active Chrome Developer Mode.
-
-
-### Binaries
-In order to build binary packages you have to install [electron-packager](https://github.com/electron-userland/electron-packager).
-
+*or with yarn*
 ```
-npm install electron-packager -g
-npm install electron-packager --save-dev
+yarn install
 ```
+
+#### Starting YT Download
+To start the release version enter
+```
+npm start
+```
+*or with yarn*
+```
+yarn start
+```
+
+To start the debug version with active Chrome Developer Mode enter
+```
+npm test
+```
+*or with yarn*
+```
+yarn test
+```
+
 ---
-## Build for Windows
-To simplify the build process, you can use the *npm* scripts. If you doesn't have changed the **yt-download:directory** variable yet, then you should probably do that now.
-
-You need [electron-builder](https://github.com/electron-userland/electron-builder) to create a NSIS installer for Windows.
-
-```
-npm install electron-builder -g
-npm install electron-builder --save-dev
-```
-
 #### Create Package
-To build binaries for Windows just enter ``npm run package-win``.
-
-#### Building yt-Download and create NSIS Installer
-To compile binaries and create an installer, you must enter ``npm run installer-win`` in the console.
-
-#### Please notice, the code is not signed
-In the ***./dist/*** folder you will find the binarys and the installer. The code is not signed so Windows will warn you at the first start or the installation process.
-
-## Build for Linux
-In order to simplify the build process, you can use the *npm* scripts. If you doesn't have changed the **yt-download:directory** variable yet, then you should probably do that now.
-
-With [electron-installer-debian](https://github.com/electron-userland/electron-installer-debian) you can create a Debian installer
-
 ```
-npm install electron-installer-debian -g
-npm install electron-installer-debian --save-dev
+npm run package
 ```
-
-#### Create Package
-To build binaries for a Debian based OS just enter ``npm run package-deb``.
-
-Now you are able to start the program with following command.
-
+*or with yarn*
 ```
-./dist/yt-download-linux-x64/yt-download
+yarn package
 ```
 
 #### Create Installer
-After you have built the package, you can create an installer.
-
 ```
-npm run installer-deb
+npm run make
+```
+*or with yarn*
+```
+yarn make
 ```
