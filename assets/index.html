@@ -1,74 +1,197 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>ytDownload</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./../node_modules/animate.css/animate.min.css">
+    <link type="text/css" rel="stylesheet" href="./materialize/css/materialize.min.css"  media="screen, projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>YT Download</title>
   </head>
   <body>
-    <div id="download-container" class="active container">
-      <div id="input-container">
-        <input type="text" id="url">
-        <button id="paste"><i class="fa fa-lg fa-paste"></i></button>
-        <button id="add"><i class="fa fa-lg fa-plus"></i></button>
+    <div id="main">
+      <div class="navbar-fixed">
+        <nav class="teal darken-2">
+          <div class="nav-wrapper">
+            <span class="brand-logo"><img src="./images/ico114.png" alt="icon" class="logo"> YT Download</span>
+            <ul class="right">
+              <li><a id="download-btn" class="waves-effect waves-light btn-floating scale-transition scale-out"><i class="material-icons">file_download</i></a></li>
+              <li><a id="add-btn" class="waves-effect waves-light btn-floating" data-target='add-dropdown'><i class="material-icons">add</i></a></li>
+              <li><a href="#modal-settings" class="waves-effect waves-light btn-floating modal-trigger"><i class="material-icons">build</i></a></li>
+            </ul>
+          </div>
+        </nav>
       </div>
-      <div id="main-container">
-        <ul>
-        </ul>
-        <div id="loading">
-          <i class="fa fa-lg fa-spinner fa-pulse fa-3x fa-fw"></i>
+      <main>
+        <div id="download-container"></div>
+        <div id="modal-settings" class="modal modal-fixed-footer bottom-sheet settings-modal grey lighten-4">
+          <div class="modal-content">
+            <h4 class="section"><i class="material-icons">build</i> Settings</h4>
+            <div class="divider"></div>
+            <div class="section">
+              <h6>Download Directory</h6>
+              <form action="#">
+                <div id="path-file-input" class="file-field input-field">
+                  <div class="btn">
+                    <span>Open</span>
+                    <input type="file">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path" type="text">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+              <h6>Download Quality</h6>
+              <div class="input-field col s12">
+                <select id="quality-select">
+                  <option value="high" selected>High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+              <h6>Default Converting Settings</h6>
+              <div class="input-field col s12">
+                <select id="convert-select">
+                  <option value="" selected>Disabled</option>
+                  <option value="mp3">MP3</option>
+                  <option value="mkv">MKV</option>
+                  <option value="webm">WEBM</option>
+                  <option value="mov">MOV</option>
+                  <option value="mpeg">MPEG</option>
+                </select>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+              <h6><i class="material-icons">info</i> YT Download stoped working?</h6>
+              <p>
+                Youtube constantly updates their website. It is not so rare that the underlying code no longer works. In this case, updates will be provided relatively promptly.
+              </p>
+              <p>
+                Version <span id="version"></span> installed.
+              </p>
+              <button id="download-update-btn" class="waves-effect waves-light btn right">Check for updates</button>
+            </div>
+            <div class="divider"></div>
+          </div>
+          <div class="modal-footer">
+            <a class="waves-effect waves-light btn modal-trigger" href="#modal-about"><i class="material-icons left">copyright</i> License</a>
+            <a href="#!" class="modal-close waves-effect waves-light waves-green btn-flat right">Close</a>
+          </div>
         </div>
-      </div>
-      <div id="status-container">
-        <button id="download"><i class="fa fa-lg fa-download"></i></button>
-        <progress max="100" value="0"></progress>
-        <div id="button-container">
-          <button id="info"><i class="fa fa-lg fa-info-circle"></i></button>
-          <button id="settings"><i class="fa fa-lg fa-cog"></i></button>
+        <div id="modal-about" class="modal" style="max-width: 550px;">
+          <div class="modal-content">
+            <h4><i class="material-icons">copyright</i> <span id="year">2019</span> Manfred Michaelis</h4>
+            <p>
+              Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+              files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+              publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+              subject to the following conditions:
+            </p>
+            <hr>
+            <p>
+              The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+            </p>
+            <hr>
+            <p>
+              THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+              FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+              WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">OK</a>
+          </div>
         </div>
-      </div>
+        <div id="modal-ffmpeg" class="modal">
+          <div class="modal-content">
+            <h4><i class="material-icons left">warning</i> FFmpeg was not found</h4>
+            <p>
+              Couldn't find FFmpeg binaries. If you installed it, please check your environment variables.
+              YT Download also works without FFmpeg, but <span class="bold">converting</span> and
+              <span class="bold">downloading</span> videos larger than <span class="bold">medium quality (720p)</span> is
+              <span class="bold">not possible.</span>
+            </p>
+						<blockquote>
+							<div class="logo-wrapper"><img src="images/ffmpeg.svg" alt="FFmpeg Logo" class="responsive-img" /></div>
+              <div class="card-panel">
+                <h6>YT Download is able to download FFmpeg from the official sources.</h6>
+              </div>
+  						Alternatively you can download the binaries at <a href="https://www.ffmpeg.org/">www.ffmpeg.org</a>.
+						</blockquote>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Continue without FFmpeg</a>
+            <a id="btn-download-ffmpeg" class="waves-effect waves-light btn">DOWNLOAD FFmpeg</a>
+          </div>
+        </div>
+        <div id="modal-loading" class="modal">
+          <div class="modal-content">
+            <h4><i class="material-icons left">info</i> <span id="modal-loading-title">Loading</span></h4>
+              <div class="row card-panel">
+                <div class="col s3">
+                  <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                    <div class="spinner-layer spinner-red">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                    <div class="spinner-layer spinner-yellow">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                    <div class="spinner-layer spinner-green">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="modal-loading-content" class="col s9">
+                </div>
+              </div>
+          </div>
+        </div>
+      </main>
     </div>
-    <div id="settings-container" class="container">
-      <button id="close-settings"><i class="fa fa-lg fa-times"></i></button>
-      <div class="note">
-        <label class="headline">Download Directory</label>
-        <label id="label-dir">PATH</label>
-        <button id="select-dir" class="float-right"><i class="fa fa-lw fa-file"></i> Directory</button>
-        <div class="clr"></div>
-      </div>
-    </div>
-    <div id="info-container" class="container">
-      <button id="close-info"><i class="fa fa-lg fa-times"></i></button>
-      <image src="images/icon.png" class="img" alt="icon">
-      <div class="note first-note">
-        <h2>ytDownload <span id="version"></span></h2>
-        <p>
-          <span id="description"></span>
-        </p>
-      </div>
-      <div class="note">
-        <span class="copy float-right"><i class="fa fa-lg fa-copyright"></i></span>
-        <span class="bold">Copyright &copy; <span id="copyY">2017</span>, Manfred Michaelis</span>
-        <p>
-          Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
-          files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
-          publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-          subject to the following conditions:
-        </p>
-        <p>
-          The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-        </p>
-        <p>
-          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-          MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-          FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-          WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-        </p>
-      </div>
-    </div>
-    <link rel="stylesheet" href="./../node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="./materialize/js/materialize.min.js"></script>
     <script>
-      require('../modules/renderer.js');
+      let {
+        ipcRenderer, clipboard, remote, dialog, getElem, getElems, animateCSS, createEl,
+        timer, selectOption, ytdl, version, config, validUrlTFunc, shell
+      } = require('./../src/render/init.js');
     </script>
+    <script type="text/javascript" src="./../src/render/eventhandler.js"></script>
+    <script type="text/javascript" src="./../src/render/card.js"></script>
+    <script type="text/javascript" src="./../src/render/index.js"></script>
   </body>
 </html>
