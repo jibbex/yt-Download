@@ -22,7 +22,8 @@
     "forge": {
       "packagerConfig": {
         "asar": false,
-        "icon": "./assets/images/icon.png"
+        "icon": "./assets/images/icon.png",
+	"executableName": "YT Download"
       },
       "makers": [
         {
@@ -90,7 +91,7 @@
     "@electron-forge/maker-rpm": "6.0.0-beta.50",
     "@electron-forge/maker-squirrel": "6.0.0-beta.50",
     "@electron-forge/maker-zip": "6.0.0-beta.50",
-    "electron": "8.1.1"
+    "electron": "8.2.0"
   },
   "browserslist": {
     "production": [
