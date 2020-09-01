@@ -15,8 +15,16 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
+### New in v1.4.0
 
-### New Features in 1.0.0
+* The mess that was *./main/ffmpeg.js* was fixed.
+* Audio and video downloads are now shown in one progress bar.
+* Added proper progress for media conversion.
+* The download speed is now displayed.
+* Added support for hardware accelerated encoding. *(Tries to find the optimal mode automatically)*
+* Some UI improvements.
+
+### New in v1.0.0
 
 * New UI build on [Materialize](https://materializecss.com/) framework
 * Downloading from Youtube in HD quality if possible
@@ -54,7 +62,7 @@ yarn test
 ```
 
 ---
-#### Create Package
+#### Create package
 ```
 npm run package
 ```
@@ -63,7 +71,7 @@ npm run package
 yarn package
 ```
 
-#### Create Installer
+#### Create installer
 ```
 npm run make
 ```

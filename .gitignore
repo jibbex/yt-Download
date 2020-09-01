@@ -59,3 +59,8 @@ typings/
 
 # next.js build output
 .next
+
+src/render/.card.js
+src/main/.ffmpeg.js
+ffmpeg
+out

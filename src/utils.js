@@ -1,7 +1,8 @@
-const fs = require('fs')
-const CONST = require('./const').Constances;
+const fs      = require('fs').promises;
+const { app } = require('electron');
+const path    = require('path');
 
-exports.removeSpecials = (str) => {
+function removeSpecials(str) {
     const lower = str.toLowerCase();
     const upper = str.toUpperCase();
 
@@ -14,52 +15,65 @@ exports.removeSpecials = (str) => {
     return result;
 }
 
-exports.init = () => {
-  fs.mkdir(
-    CONST.DEFAULT_SETTINGS.folder,
-    { recursive: false },
-    () => {}
-  );
-
-  return new Promise((resolve, reject) => {
-    fs.mkdir(CONST.DIRECTORY, { recursive: false }, (err) => {
-      fs.readFile(CONST.CONFIG_FILE, (err, data) => {
-        if(err) {
-          fs.writeFile(
-            CONST.CONFIG_FILE,
-            JSON.stringify(CONST.DEFAULT_SETTINGS),
-            {flag: 'ax'}, () => {resolve(CONST.DEFAULT_SETTINGS)});
-        }
-        else {
-          resolve(JSON.parse(data));
-        }
-      })
+class Config {
+  constructor() {
+    const DIR       = path.join(
+                        (process.platform == 'win32' 
+                            ? process.env.USERPROFILE 
+                            : process.env['HOME'])
+                        ,'/yt-download'
+                      );
+    const FILE        = path.join(DIR, '/conf.json');
+    
+    this.DIRECTORY    = DIR;
+    this.CONFIG_FILE  = FILE;
+    
+    Object.assign(this, {
+      folder: path.join(app.getPath('videos'), '/', 'yt-download'),
+      convert: '',
+      quality: 'high',
+      acceleration: false,
+      windowSize: {
+        width:816,
+        height:864
+      }    
     });
-  })
+  }
+  
+  get Obj() {
+    const config = {};
+    Object.assign(config, this)
+    delete config.DIRECTORY;
+    delete config.CONFIG_FILE;
+    return config;
+  }
+  
+  async init() {
+    try {
+      await fs.mkdir(this.DIRECTORY, { recursive: false });        
+    }
+    catch(error) {
+      if(error.code !== 'EEXIST') {
+        throw error;
+      }
+    }
+    finally {
+      try {
+        const config = JSON.parse((await fs.readFile(this.CONFIG_FILE)));
+        Object.assign(this, config);
+      }
+      catch(error) {
+        await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj, {flag: 'ax'}));
+        return this;
+      }
+    }
+  }
+  
+  async save(config) {
+    Object.assign(this, config);
+    await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj));
+  }
 }
 
-exports.saveConfig = (conf) => {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(CONST.CONFIG_FILE , JSON.stringify(conf), (err) => {
-      if(err) {
-        reject(err);
-      }
-      else {
-        resolve(conf);
-      }
-  	});
-  })
-}
-
-exports.unlink = (file) => {
-  return new Promise((resolve, reject) => {
-    fs.unlink(file, (err) =>  {
-      if(err) {
-        reject(err);
-      }
-      else {
-        resolve(true);
-      }
-    })
-  });
-}
+exports.config = new Config();
+exports.removeSpecials = removeSpecials;

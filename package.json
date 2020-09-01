@@ -1,8 +1,9 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
-  "version": "1.0.2",
+  "version": "1.4.0",
   "description": "Downloads videos from Youtube",
+  "company": "YT Download",
   "main": "src/main/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -23,7 +24,7 @@
       "packagerConfig": {
         "asar": false,
         "icon": "./assets/images/icon.png",
-	"executableName": "YT Download"
+        "executableName": "YT Download"
       },
       "makers": [
         {
@@ -32,7 +33,8 @@
             "name": "yt-download",
             "iconUrl": "file:///D:/Users/m_mic/Data/Projekte/yt-Download_v1.0/yt-download/assets/images/icon.ico",
             "setupIcon": "./assets/images/icon.ico",
-            "loadingGif": "./assets/images/install.gif"
+            "loadingGif": "./assets/images/install.gif",
+            "company": "YT Download"
           }
         },
         {
@@ -46,43 +48,46 @@
         {
           "name": "@electron-forge/maker-deb",
           "config": {
-	   	      "maintainer": "Manfred Michaelis",
-      		  "homepage": "https://michm.de",		        
-		        "icon": "./assets/images/icon.png",
-		        "name": "yt-download",
-		        "productName": "YT Download",
-		        "description": "Downloads videos from Youtube",
-		        "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-		        "version": "1.0.2",
-		        "scripts": {
-			        "postinst": "./build/post_inst"
-		        },
-		        "section": "web"
-	        }
+            "maintainer": "Manfred Michaelis",
+            "homepage": "https://michm.de",
+            "icon": "./assets/images/icon.png",
+            "name": "yt-download",
+            "productName": "YT Download",
+            "description": "Downloads videos from Youtube",
+            "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
+            "version": "1.0.2",
+            "scripts": {
+              "postinst": "./build/post_inst"
+            },
+            "section": "web"
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",
           "config": {
-	   	      "maintainer": "Manfred Michaelis",
-      		  "homepage": "https://michm.de",		        
-		        "icon": "./assets/images/icon.png",
-		        "name": "yt-download",
-		        "productName": "YT Download",
-		        "description": "Downloads videos from Youtube",
-		        "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-		        "version": "1.0.2",
-		        "license": "MIT",
-		        "section": "web"
-	        }
+            "maintainer": "Manfred Michaelis",
+            "homepage": "https://michm.de",
+            "icon": "./assets/images/icon.png",
+            "name": "yt-download",
+            "productName": "YT Download",
+            "description": "Downloads videos from Youtube",
+            "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
+            "version": "1.0.2",
+            "license": "MIT",
+            "section": "web"
+          }
         }
       ]
     }
   },
   "dependencies": {
     "animate.css": "^3.7.2",
+    "async": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "ffbinaries": "^1.1.4",
-    "fluent-ffmpeg": "^2.1.2",
+    "materialize-css": "^1.0.0",
+    "progressbar.js": "^1.1.0",
+    "tree-kill": "^1.2.2",
     "ytdl-core": "^3.1.1"
   },
   "devDependencies": {

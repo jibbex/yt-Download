@@ -1,13 +1,36 @@
+const { 
+        ipcRenderer, clipboard, remote, shell, 
+      }               = require('electron');
+const { 
+        getElem, getElems, animateCSS, createEl, 
+        selectOption, validUrlTFunc 
+      }               = require('../src/render/utils');
+const { dialog }      = remote;
+const ytdl            = require('ytdl-core');
+const ProgressBar     = require('../node_modules/progressbar.js/dist/progressbar');
+const { version }     = require('../package.json');
+const { Card }        = require('../src/render/.card');
+const events          = require('../src/render/eventhandler');
+
+let timer = setInterval(validUrlTFunc, 1000);
+
+Object.assign(this, events, ProgressBar);
+init();
+
 getElem('#path-file-input').addEventListener('click', fileInputClickHandler);
 getElem('#add-btn').addEventListener('click', addBtnClickHandler);
 getElem('#download-btn').addEventListener('click', downloadBtnClickHandler);
 getElem('#quality-select').addEventListener('change', changeSelectQualityHandler);
 getElem('#convert-select').addEventListener('change', changeSelectConvertHandler);
+getElem('#accel-checkbox').addEventListener('click', changeAccelerationHandler);
 getElem('#add-btn').addEventListener('mouseover', pulseDeactivate);
 getElem('#add-btn').addEventListener('mouseleave', pulseActivate);
 getElem('#modal-ffmpeg a').addEventListener('click', linkClickHandler);
 getElem('#btn-download-ffmpeg').addEventListener('click', downloadFFmpegBtnClickHandler);
 getElem('#download-update-btn').addEventListener('click', downloadUpdateBtnClickHandler);
+
+getElem('#year').innerHTML = new Date().getFullYear();
+getElem('#version').innerHTML = version;
 
 function enableExtendedMode(enable = true) {
   if(!enable) {
@@ -19,9 +42,7 @@ function enableExtendedMode(enable = true) {
     M.FormSelect.getInstance(getElem('#quality-select')).destroy();
     M.FormSelect.getInstance(getElem('#convert-select')).destroy();
     M.FormSelect.init(getElem('#quality-select'));
-    M.FormSelect.init(getElem('#convert-select'));
-
-    Card.prototype.disableExtendedMode(true);
+    M.FormSelect.init(getElem('#convert-select'));    
   }
   else {
     Card.prototype.quality = config.quality;
@@ -33,29 +54,24 @@ function enableExtendedMode(enable = true) {
     M.FormSelect.getInstance(getElem('#convert-select')).destroy();
     M.FormSelect.init(getElem('#quality-select'));
     M.FormSelect.init(getElem('#convert-select'));
-
-    Card.prototype.disableExtendedMode(false);
   }
+  
+  Card.prototype.toggleExtendedMode();
 }
 
 ipcRenderer.on('message', (event, args) => {
-  if(args.command == 'config') {
-    config = args.config;
+  const { command, config } = args;
+  if(command == 'config') {
     Card.prototype.quality = config.quality;
     Card.prototype.convert = config.convert;
 
     getElem('.file-path').value = config.folder;
+    getElem('#accel-checkbox').checked = config.acceleration    
 
     selectOption(getElem('#quality-select'), config.quality);
     selectOption(getElem('#convert-select'), config.convert);
 
-    if(config.api.active) {
-      M.Dropdown.init(getElems('#add-btn'), {closeOnClick: false});
-
-      getElem('#api-key-input').value = config.api.key;
-      getElem('#save-apiKey-btn').disabled = false;
-      getElem('#api-key-input').disabled = false;
-    }
+    M.updateTextFields();
 
     if(!args.ffmpegInstalled) {
       enableExtendedMode(false);
@@ -63,14 +79,14 @@ ipcRenderer.on('message', (event, args) => {
       modalFfmpeg.open();
     }
   }
-  if(args.command == 'saved') {
-    config = args.config;
+  if(command == 'saved') {  
     Card.prototype.quality = config.quality;
     Card.prototype.convert = config.convert;
   }
-  if(args.command == 'remove') {
+  if(command == 'remove') {
     const dlBtn = getElem('#download-btn');
     const elem = document.getElementById(args.elId);
+    progresses.delete(args.elId);
     animateCSS(elem, 'zoomOut', () => {
       const parent = getElem('#download-container');
       parent.removeChild(elem);
@@ -84,96 +100,52 @@ ipcRenderer.on('message', (event, args) => {
       download();
     })
   }
-  if(args.command == 'progress') {
+  if(command == 'progress') {
     const dlBtn = getElem('#download-btn');
-    const elem = getElem('#download-container').children[0];
-    const progEl = elem.querySelector('.progress > div');
-    const progElSec = elem.querySelector('.sec > div');
-
-    if(args.stream == 'audio') {
-      progElSec.parentElement.style.display = 'block';
-      progElSec.classList.remove('indeterminate');
-      progElSec.classList.add('determinate');
-      progElSec.style.width = `${parseInt(args.percent)}%`;
+    const elem = document.getElementById(args.elId);
+    const speedEl = elem.querySelector('.dl-speed');
+    const pb = progresses.get(args.elId);
+    
+    pb.set(args.percent / 100);
+    pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
+    
+    if(args.speed) {
+      if(!speedEl.style.display)
+        speedEl.style.display = 'inline';
+        
+      const speed = (args.speed / 1000).toFixed(2);
+      
+      speedEl.innerHTML = speed > 999 
+                      ? (speed / 1000).toFixed(2) + ' MB/s' 
+                      : speed + 'KB/s';
+      
     }
-
-    if(args.stream == 'video') {
-      progEl.classList.remove('indeterminate');
-      progEl.classList.add('determinate');
-      progEl.style.width = `${parseInt(args.percent)}%`;
+    else {
+      speedEl.style.display = '';
     }
-
+    
     if(!dlBtn.classList.contains('deactive'))
       dlBtn.classList.add('deactive');
     elem.querySelector('.info-txt').innerHTML = `${args.job}`;
   }
-  if(args.command == 'startMerge') {
-    const elem = getElem('#download-container').children[0];
-    const progEl = elem.querySelector('.progress > div');
-    const progElSec = elem.querySelector('.sec > div');
-    progEl.classList.remove('determinate');
-    progEl.classList.add('indeterminate');
-    progEl.style.width = 'auto';
-    progElSec.classList.remove('determinate');
-    progElSec.classList.add('indeterminate');
-    progElSec.style.width = 'auto';
-    elem.querySelector('.sec').style.display = '';
-    elem.querySelector('.info').style.display = 'block';
-    elem.querySelector('.info-txt').innerHTML = `Merging`;
+  if(command == 'startConvert') {
   }
-  if(args.command == 'converting') {
-    const elem = getElem('#download-container').children[0];
-    const progEl = elem.querySelector('.progress > div');
-    progEl.classList.remove('determinate');
-    progEl.classList.add('indeterminate');
-    progEl.style.width = 'auto';
-    elem.querySelector('.info').style.display = 'block';
-    if(args.progress.percent !== undefined) {
-      elem.querySelector('.info-txt').innerHTML = `Converting ${args.progress.percent} %`;
-    }
-    else {
-      elem.querySelector('.info-txt').innerHTML = `Converting <span class="right">${args.progress.timemark}</span>`;
-    }
+  if(command == 'downloaded') {
+    const elem = document.getElementById(args.elId);
+    const pb = progresses.get(args.elId);
+    const speedEl = elem.querySelector('.dl-speed');
+    pb.set(0);
+    pb.setText('');    
+    elem.querySelector('.info-txt').innerHTML = '';    
+    speedEl.innerHTML = '';
+    speedEl.style.display = '';
   }
-  if(args.command == 'startConvert') {
-    const elem = getElem('#download-container').children[0];
-    const progEl = elem.querySelector('.progress > div');
-    progEl.classList.remove('determinate');
-    progEl.classList.add('indeterminate');
-    progEl.style.width = 'auto';
-    elem.querySelector('.info').style.display = 'block';
-    elem.querySelector('.info-txt').innerHTML = 'Converting';
-  }
-  if(args.command == 'downloaded') {
-    const elem = getElem('#download-container').children[0];
-    const progEl = elem.querySelector('.progress > div');
-    const progElSec = elem.querySelector('.sec > div');
-    progEl.classList.remove('determinate');
-    progEl.classList.add('indeterminate');
-    progEl.style.width = 'auto';
-    progElSec.classList.remove('determinate');
-    progElSec.classList.add('indeterminate');
-    progElSec.style.width = 'auto';
-    elem.querySelector('.info').style.display = '';
-    progElSec.parentElement.style.display = '';
-  }
-  if(args.command == 'downloadedFFmpeg') {
+  if(command == 'downloaded-FFmpeg') {
     const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
     modalLoading.close();
     enableExtendedMode(true);
   }
-  if(args.command == 'error') {
+  if(command == 'error') {
     dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: args.error.message});
   }
 })
-
-ipcRenderer.on('converting', (event, args) => {
-  const elem = getElem('#download-container').children[0];
-  const progEl = elem.querySelector('.progress > div');
-  progEl.classList.remove('determinate');
-  progEl.classList.add('indeterminate');
-  progEl.style.width = 'auto';
-  elem.querySelector('.info').style.display = 'block';
-  console.log(args);
-  elem.querySelector('.info-txt').innerHTML = `Converting ${args.timemark}`;
-});
