@@ -9,7 +9,7 @@ const { dialog }      = remote;
 const ytdl            = require('ytdl-core');
 const ProgressBar     = require('../node_modules/progressbar.js/dist/progressbar');
 const { version }     = require('../package.json');
-const { Card }        = require('../src/render/.card');
+const { Card }        = require('../src/render/card');
 const events          = require('../src/render/eventhandler');
 
 let timer = setInterval(validUrlTFunc, 1000);
