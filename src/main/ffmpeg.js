@@ -206,7 +206,7 @@ async function convert({ bin, acceleration, accels }, files, format, out) {
   args.push(out ? `-y "${out}"` : `-y "${files}.${format}"`);
   
   const duration = Math.max(...times);
-  
+
   proc = spawn(bin.ffmpeg, args, {shell: true});  
   
   return Object.assign(proc, { duration: duration, args: args.join(' ') });  
@@ -224,8 +224,8 @@ const queues = {
     const MEDIUM_VIDEO  = { quality: 'highest', filter: 'audioandvideo' };
     const LOW_VIDEO     = { quality: 'lowest', filter: 'audioandvideo' };
     const HIGH_AUDIO    = { quality: 'highestaudio', filter: 'audioonly' };
-    const MEDIUM_AUDIO  = { quality: 'highest', filter: 'audioonly' };
-    const LOW_AUDIO     = { quality: 'lowest', filter: 'audioonly' };
+    const MEDIUM_AUDIO  = { quality: 'highestaudio', filter: 'audioonly' };
+    const LOW_AUDIO     = { quality: 'lowestaudio', filter: 'audioonly' };
     
     const title       = removeSpecials(item.title);    
     const format      = item.convert || 'mp4';
@@ -240,7 +240,7 @@ const queues = {
                           speed: 0,
                           video: {
                             downloaded: 0,
-                            tota: 0
+                            total: 0
                           },
                           audio: {
                             downloaded: 0,
@@ -347,7 +347,7 @@ const queues = {
   }, 4),
   convert: queue(({ task, _this}, cb) => {      
     convert(_this, task.files, task.format, task.out).then(proc => {
-      proc.stderr.on('data', (data) => {
+      proc.stderr.on('data', (data) => {        
         const str = data.toString();
         const i = str.indexOf('time=') + 5;
     
@@ -388,7 +388,7 @@ const queues = {
         task.files.forEach(async (file) => {
           await fs.unlink(file);              
         });
-        
+        console.log(code)
         cb(undefined, task);                    
       });
     }).catch(error => {
@@ -437,7 +437,6 @@ class FFmpeg extends EventEmitter {
           if(error) {
             return this.emit('error', error);
           }          
-          console.log(task.args)
           this.emit('finished', task.elemId);  
         });
       }      
