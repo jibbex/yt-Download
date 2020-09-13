@@ -106,6 +106,8 @@ ipcRenderer.on('message', (event, args) => {
     const speedEl = elem.querySelector('.dl-speed');
     const pb = progresses.get(args.elId);
     
+    args.percent = args.percent <= 100 ? args.percent : 0;
+    
     pb.set(args.percent / 100);
     pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
     
