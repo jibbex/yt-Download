@@ -24,13 +24,14 @@
       "packagerConfig": {
         "asar": false,
         "icon": "./assets/images/icon.png",
-        "executableName": "YT Download"
+        "executableName": "yt-download"
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "yt-download",
+            "exe": "yt-download.exe",
             "iconUrl": "file:///D:/Users/m_mic/Data/Projekte/yt-Download_v1.0/yt-download/assets/images/icon.ico",
             "setupIcon": "./assets/images/icon.ico",
             "loadingGif": "./assets/images/install.gif",
@@ -55,7 +56,7 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.0.2",
+            "version": "1.4.1",
             "scripts": {
               "postinst": "./build/post_inst"
             },
@@ -72,7 +73,7 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.0.2",
+            "version": "1.4.1",
             "license": "MIT",
             "section": "web"
           }
