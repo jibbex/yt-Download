@@ -123,7 +123,7 @@ module.exports = {
       
       const pbEl = document.getElementById(elem.id).querySelector('.info .progress');
       
-      progresses.set(card.element.id, new ProgressBar.Circle(pbEl, {
+      progresses.set(elem.id, new ProgressBar.Circle(pbEl, {
         color: '#00796b',
         strokeWidth: 6,
         trailColor: 'rgba(38, 166, 154,.5)',
