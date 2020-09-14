@@ -37,8 +37,8 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: config.windowSize.width,
     height: config.windowSize.height,
-    minWidth: 640,
-    minHeight: 864,
+    minWidth: DEV ? 0 : 640,
+    minHeight: DEV ? 0 : 864,
     show: false,
     center: true,
     nativeWindowOpen: true,
