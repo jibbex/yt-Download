@@ -1,7 +1,7 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Downloads videos from Youtube",
   "company": "YT Download",
   "main": "src/main/index.js",
