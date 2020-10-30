@@ -46,7 +46,7 @@ module.exports = {
     if(ytdl.validateURL(url)) {
       try {
         const id = ytdl.getURLVideoID(url);
-        const info = await ytdl.getBasicInfo(url);
+        const info = (await ytdl.getBasicInfo(url)).videoDetails;
   
         card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
         card.appendTo(getElem('#download-container'));
