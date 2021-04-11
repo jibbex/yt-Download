@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - electron
+      - 1.5.0-dev
 jobs:
   build_on_mac:
     runs-on: macOS-latest
