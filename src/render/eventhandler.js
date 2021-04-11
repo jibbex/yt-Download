@@ -30,22 +30,9 @@ const events = {
       }
     }, 1000);
   },
-  fileInputClickHandler: async function (ev) {
+  fileInputClickHandler: (ev) => {
     ev.preventDefault();
-    try {
-      const dir = await electron.dialog();
-
-      if(!dir.canceled) {
-        this.querySelector('.file-path').value = dir.filePaths[0];
-        config.folder = dir.filePaths[0];
-        electron.send({command: 'saveConfig', config: config});
-      }
-    }
-    catch(err) {
-      console.error(err);
-      electron.error(err);
-      //electron.dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: 'Directory could not selected'});
-    }
+    electron.send({command: 'selectPath'})
   },
   addUrlFromClipboard: function() {
     if(validUrlTFunc()) {    

@@ -207,4 +207,8 @@ ipc('message', (args) => {
       console.error(err);
     }
   }
+  if(command == 'savedPath') {
+    document.querySelector('.file-path').value = args.path;
+    config.folder = args.path;
+  }
 })

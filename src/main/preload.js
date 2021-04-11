@@ -27,7 +27,6 @@ exports = contextBridge.exposeInMainWorld(
         shell.openExternal(config.folder);
       };
     },
-    dialog: () => dialog.showOpenDialog(remote.getCurrentWindow(), {defaultPath : config.folder, properties:["openDirectory"]}),
     ipc: (channel, func) => {
       let validChannels = ['message'];
       if (validChannels.includes(channel)) {

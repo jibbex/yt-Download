@@ -1,11 +1,21 @@
-const { app, BrowserWindow, ipcMain }           = require('electron');
-const path                                      = require('path');
-const { config }                                = require('./../utils');
-const { 
-        downloadFFmpeg, isFFmpegInstalled, 
-        ffmpeg, getBin 
-      }                                         = require('./ffmpeg');
+const {
+  app, 
+  BrowserWindow, 
+  ipcMain, 
+  dialog
+} = require('electron');
+
+const {config} = require('./../utils');
+const path = require('path');
 const ytdl = require('ytdl-core');
+
+const { 
+  downloadFFmpeg, 
+  isFFmpegInstalled, 
+  ffmpeg, 
+  getBin 
+} = require('./ffmpeg');
+
 let args = {};
 let mainWindow;
 
@@ -157,10 +167,26 @@ ipcMain.on('message', async (event, args) => {
     }
   }
   if(args.command == 'getInfo') {
-        const id = ytdl.getURLVideoID(args.url);
-        const info = (await ytdl.getBasicInfo(args.url)).videoDetails;
-        console.log(info)
-        mainWindow.webContents.send('message', {command: 'info', id: id, info: info});
+    const id = ytdl.getURLVideoID(args.url);
+    const info = (await ytdl.getBasicInfo(args.url)).videoDetails;
+    console.log(info)
+    mainWindow.webContents.send('message', {command: 'info', id: id, info: info});
+  }
+  if(args.command == 'selectPath') {
+    const path = await dialog.showOpenDialog(
+                        mainWindow, 
+                        {
+                          defaultPath : config.folder, 
+                          properties:["openDirectory"]
+                        }
+                      );
+    try {
+      await config.save({folder: path.filePaths[0]});
+      event.sender.send('message', {command: 'savedPath', path: path.filePaths[0]})
+    }
+    catch(err) {
+      throw err;
+    }    
   }
 })
 
