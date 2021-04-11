@@ -169,7 +169,7 @@ ipcMain.on('message', async (event, args) => {
   if(args.command == 'getInfo') {
     const id = ytdl.getURLVideoID(args.url);
     const info = (await ytdl.getBasicInfo(args.url)).videoDetails;
-    console.log(info)
+
     mainWindow.webContents.send('message', {command: 'info', id: id, info: info});
   }
   if(args.command == 'selectPath') {

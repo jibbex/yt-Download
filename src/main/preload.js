@@ -16,7 +16,10 @@ exports = contextBridge.exposeInMainWorld(
     version: version,
     ytdl: () => { return ytdl },
     getVideoId: (url) => { return ytdl.getURLVideoID(url) },
-    getInfo: () => ipcRenderer.send('message', {command: 'getInfo', url: clipboard.readText('text')}),
+    getInfo: () => {
+      ipcRenderer.send('message', {command: 'getInfo', url: clipboard.readText('text')});
+      clipboard.writeText('');
+    },
     shellOpen: (ref) => shell.openExternal(ref),
     notify: (msg) => {
       const notify = new Notification('Download complete', {

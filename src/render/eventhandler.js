@@ -22,7 +22,7 @@ const events = {
   },
   pulseActivate: function(ev) {
     timer = setInterval(() => {
-      if(electron.validateURL) {
+      if(electron.validUrlTFunc()) {
         getElem('#add-btn').classList.add('pulse');
       }
       else {
@@ -134,7 +134,7 @@ const events = {
   },
   downloadBtnClickHandler:
   function (ev) {
-    module.exports.download();
+    events.download();
   },
   linkClickHandler: function (ev) {
     ev.preventDefault();

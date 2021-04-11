@@ -195,8 +195,7 @@ ipc('message', (args) => {
       card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
       card.appendTo(getElem('#download-container'));
 
-      animateCSS(card.element, 'zoomIn');
-      clipboard.writeText('');
+      animateCSS(card.element, 'zoomIn');      
 
       if(dlBtn.classList.contains('scale-out') && !dlBtn.classList.contains('deactive')) {
         dlBtn.classList.remove('scale-out');
