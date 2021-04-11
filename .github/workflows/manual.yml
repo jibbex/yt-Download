@@ -1,0 +1,42 @@
+# This is a basic workflow that is manually triggered
+
+name: Electron Forge Action
+  # You may pin to the exact commit or the version.
+  # uses: yinxulai/actions-electron-forge@456a6517c5241e4d693507b99a30dac8fe622102
+  uses: yinxulai/actions-electron-forge@0.05
+  with:
+  # GitHub authentication token
+  github_token: 
+  # Directory where NPM/Yarn commands should be run
+  package_root: # optional, default is .
+  # Optional package.json scripts name
+  script_name: # optional, default is publish
+  # Whether the app should be released after a successful build
+  #release: true
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      name:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Person to greet'
+        # Default value if no value is explicitly provided
+        default: 'World'
+        # Input has to be provided for the workflow to run
+        required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  greet:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Send greeting
+      run: echo "Hello ${{ github.event.inputs.name }}"
