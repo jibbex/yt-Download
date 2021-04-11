@@ -6,7 +6,7 @@ name: Electron Forge Action
   uses: yinxulai/actions-electron-forge@0.05
   with:
   # GitHub authentication token
-  github_token: 
+  github_token: ih1528869dEMC
   # Directory where NPM/Yarn commands should be run
   package_root: # optional, default is .
   # Optional package.json scripts name
