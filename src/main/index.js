@@ -5,7 +5,7 @@ const {
         downloadFFmpeg, isFFmpegInstalled, 
         ffmpeg, getBin 
       }                                         = require('./ffmpeg');
-
+const ytdl = require('ytdl-core');
 let args = {};
 let mainWindow;
 
@@ -45,8 +45,16 @@ const createWindow = async () => {
     thickFrame: true,
     icon: path.join(__dirname + '/../../assets/images/ico.png'),
     webPreferences: {
-      nodeIntegration: true,
-			nodeIntegrationInWorker: true
+      /* ---------------------------------------------------- 
+        Dialog und ähnliche API Aufrufe in den main thread
+        auslagern, mittels invoke aufrufen und enableRemoteModule 
+        auf false setzen um den Best Practice folgezuleisten.
+
+      */
+      enableRemoteModule: true,
+      /* ----------------------------------------------------  */
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -70,6 +78,9 @@ const createWindow = async () => {
         windowSize: {
           width: sizes[0], 
           height: sizes[1]
+        },
+        webPreferences: {
+          preload: '../preload.js'
         }
       });
       
@@ -144,6 +155,12 @@ ipcMain.on('message', async (event, args) => {
       console.log(err);
       event.sender.send('message', {command: 'error', error: err.message});
     }
+  }
+  if(args.command == 'getInfo') {
+        const id = ytdl.getURLVideoID(args.url);
+        const info = (await ytdl.getBasicInfo(args.url)).videoDetails;
+        console.log(info)
+        mainWindow.webContents.send('message', {command: 'info', id: id, info: info});
   }
 })
 

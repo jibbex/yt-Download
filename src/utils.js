@@ -1,6 +1,4 @@
-const fs      = require('fs').promises;
-const { app } = require('electron');
-const path    = require('path');
+const fs = require('fs').promises;
 
 function removeSpecials(str) {
     const lower = str.toLowerCase();
@@ -17,6 +15,8 @@ function removeSpecials(str) {
 
 class Config {
   constructor() {
+    const { app } = require('electron');
+    const path    = require('path');
     const DIR       = path.join(
                         (process.platform == 'win32' 
                             ? process.env.USERPROFILE 

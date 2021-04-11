@@ -1,21 +1,53 @@
-const { 
-        ipcRenderer, clipboard, remote, shell, 
-      }               = require('electron');
-const { 
-        getElem, getElems, animateCSS, createEl, 
-        selectOption, validUrlTFunc 
-      }               = require('../src/render/utils');
-const { dialog }      = remote;
-const ytdl            = require('ytdl-core');
-const ProgressBar     = require('../node_modules/progressbar.js/dist/progressbar');
-const { version }     = require('../package.json');
-const { Card }        = require('../src/render/card');
-const events          = require('../src/render/eventhandler');
+const selectOption = (elem, val) => {
+  for(i = 0; i < elem.options.length; i++) {
+    if(elem.options[i].value == val) {
+      const selectEl = M.FormSelect.getInstance(elem);
+      elem.selectedIndex = i;
+      elem.options[i].selected = true;
+      selectEl.input.value = elem.options[i].innerHTML;
+      break;
+    }
+  }
+}
+const createEl = (el, isTextNode = false) => {
+  try {
+    if(isTextNode)
+      return document.createTextNode(el);
 
-let timer = setInterval(validUrlTFunc, 1000);
+    return document.createElement(el);
+  }
+  catch(err) {
+    return document.createTextNode(el);
+  }
+}
+const animateCSS  = (element, animationName, callback)  => {
+    const node = typeof(element) === 'object' ? element : document.querySelector(element)
+    node.classList.add('animated', animationName)
 
-Object.assign(this, events, ProgressBar);
-init();
+    function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+
+        if (typeof callback === 'function') callback()
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd)
+}
+const getElem = (query) => {
+  return document.querySelector(query);
+}
+const getElems = (query) => {
+  return document.querySelectorAll(query);
+}
+
+let timer = setInterval(() => {
+  if(electron.validateURL) {
+    getElem('#add-btn').classList.add('pulse');
+  }
+  else {
+    getElem('#add-btn').classList.remove('pulse');
+  }
+},1000);
 
 getElem('#path-file-input').addEventListener('click', fileInputClickHandler);
 getElem('#add-btn').addEventListener('click', addBtnClickHandler);
@@ -59,7 +91,7 @@ function enableExtendedMode(enable = true) {
   Card.prototype.toggleExtendedMode();
 }
 
-ipcRenderer.on('message', (event, args) => {
+ipc('message', (args) => {
   const { command, config } = args;
   if(command == 'config') {
     Card.prototype.quality = config.quality;
@@ -149,5 +181,30 @@ ipcRenderer.on('message', (event, args) => {
   }
   if(command == 'error') {
     dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: args.error.message});
+  }
+  if(command == 'info') {
+    try {
+      const dlBtn = getElem('#download-btn');
+      
+      const {url, id, info} = args; 
+
+      console.log(url);
+      console.log(id);
+      console.log(info);
+      
+      card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
+      card.appendTo(getElem('#download-container'));
+
+      animateCSS(card.element, 'zoomIn');
+      clipboard.writeText('');
+
+      if(dlBtn.classList.contains('scale-out') && !dlBtn.classList.contains('deactive')) {
+        dlBtn.classList.remove('scale-out');
+      }
+    }
+    catch(err) {        
+      electron.error(err.message);
+      console.error(err);
+    }
   }
 })

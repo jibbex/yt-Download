@@ -231,5 +231,3 @@ class Card {
 Card.prototype.quality = 'high';
 Card.prototype.convert = false;
 Card.prototype.extendedMode = true;
-
-module.exports.Card = Card;
