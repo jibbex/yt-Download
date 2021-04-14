@@ -2,14 +2,12 @@ const {
   ipcRenderer, clipboard, remote, shell, contextBridge
 } = require('electron');
 
-const { dialog } = remote;
 const ytdl = require('ytdl-core');
 const { version } = require('../../package.json');
 
 exports = contextBridge.exposeInMainWorld(
   'electron',
   {
-    error: (msg) => dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: msg}),
     send: (args) => ipcRenderer.send('message', args),
     validUrlTFunc: () => { return ytdl.validateURL(clipboard.readText('text')); },
     clipText: () => { return clipboard.readText('text') },
@@ -17,8 +15,8 @@ exports = contextBridge.exposeInMainWorld(
     ytdl: () => { return ytdl },
     getVideoId: (url) => { return ytdl.getURLVideoID(url) },
     getInfo: () => {
-      ipcRenderer.send('message', {command: 'getInfo', url: clipboard.readText('text')});
-      clipboard.writeText('');
+      ipcRenderer.send('message', {command: 'getInfo'});
+      
     },
     shellOpen: (ref) => shell.openExternal(ref),
     notify: (msg) => {

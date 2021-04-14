@@ -2,7 +2,8 @@ const {
   app, 
   BrowserWindow, 
   ipcMain, 
-  dialog
+  dialog,
+  clipboard
 } = require('electron');
 
 const {config} = require('./../utils');
@@ -56,12 +57,10 @@ const createWindow = async () => {
     icon: path.join(__dirname + '/../../assets/images/ico.png'),
     webPreferences: {
       /* ---------------------------------------------------- 
-        Dialog und ähnliche API Aufrufe in den main thread
-        auslagern, mittels invoke aufrufen und enableRemoteModule 
-        auf false setzen um den Best Practice folgezuleisten.
+        Finally no need for remote module anymore.
 
       */
-      enableRemoteModule: true,
+      // enableRemoteModule: true,
       /* ----------------------------------------------------  */
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
@@ -167,10 +166,12 @@ ipcMain.on('message', async (event, args) => {
     }
   }
   if(args.command == 'getInfo') {
-    const id = ytdl.getURLVideoID(args.url);
-    const info = (await ytdl.getBasicInfo(args.url)).videoDetails;
+    const url = clipboard.readText('text');
+    const id = ytdl.getURLVideoID(url);
+    const info = (await ytdl.getBasicInfo(url)).videoDetails;
 
-    mainWindow.webContents.send('message', {command: 'info', id: id, info: info});
+    mainWindow.webContents.send('message', {command: 'info', id: id, info: info, url: url });
+    clipboard.writeText('');
   }
   if(args.command == 'selectPath') {
     const path = await dialog.showOpenDialog(
@@ -187,6 +188,9 @@ ipcMain.on('message', async (event, args) => {
     catch(err) {
       throw err;
     }    
+  }
+  if(args.command == 'error') {
+    dialog.showMessageBox(mainWindow, {type: 'error', title: 'Error', message: args.error.message});
   }
 })
 

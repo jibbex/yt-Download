@@ -180,7 +180,7 @@ ipc('message', (args) => {
     enableExtendedMode(true);
   }
   if(command == 'error') {
-    dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: args.error.message});
+    electron.send({command: 'error', error: err});
   }
   if(command == 'info') {
     try {
@@ -202,7 +202,7 @@ ipc('message', (args) => {
       }
     }
     catch(err) {        
-      electron.error(err.message);
+      electron.send({command: 'error', error: err});
       console.error(err);
     }
   }
