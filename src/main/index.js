@@ -49,7 +49,7 @@ const createWindow = async () => {
 			nodeIntegrationInWorker: true
     }
   });
-
+/* */
   mainWindow.setMenu(null);
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadURL(`file://${__dirname}/../../assets/index.html`);
