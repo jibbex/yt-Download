@@ -26,7 +26,7 @@ const DEV       = process.argv.includes('dev');
 const NO_FFMPEG = process.argv.includes('no-ffmpeg');
 
 if(process.platform === 'win32') {
-  app.setAppUserModelId('de.michm.yt-download');
+  app.setAppUserModelId('YT Download');
 }
 
 
@@ -79,9 +79,6 @@ const createWindow = async () => {
         windowSize: {
           width: sizes[0], 
           height: sizes[1]
-        },
-        webPreferences: {
-          preload: '../preload.js'
         }
       });
       
