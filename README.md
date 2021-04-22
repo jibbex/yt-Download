@@ -15,6 +15,10 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
+### New in v1.5.0
+* Render thread works now in context isolation
+* Support for Electron > 11
+
 ### New in v1.4.0
 
 * The mess that was *./main/ffmpeg.js* was fixed.
@@ -28,7 +32,7 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 
 * New UI build on [Materialize](https://materializecss.com/) framework
 * Downloading from Youtube in HD quality if possible
-* Converting to MP3, MKV, WEBM, MOV and MPEG
+* Converting to ~~MP3~~, MKV, WEBM, MOV and MPEG
 * Select quality of the download
 * Easy package and installer building with [Electron Forge](https://github.com/electron-userland/electron-forge)
 
