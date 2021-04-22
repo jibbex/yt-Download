@@ -176,8 +176,10 @@ ipcMain.on('message', async (event, args) => {
         }
       );
       try {
-        await config.save({folder: path.filePaths[0]});
-        event.sender.send('message', {command: 'saved-path', path: path.filePaths[0]})
+        if(path.filePaths[0] !== undefined) {
+          await config.save({folder: path.filePaths[0]});
+          event.sender.send('message', {command: 'saved-path', path: path.filePaths[0]})
+        }
       }
       catch(err) {
         console.error(err);

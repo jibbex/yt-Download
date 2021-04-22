@@ -183,7 +183,7 @@ ipc('message', (args) => {
       break;
     case 'saved-path':
       document.querySelector('.file-path').value = args.path;
-      config.folder = args.path;
+      events.config.folder = args.path;
       break;
     case 'error':
       send({command: 'error', error: err});
