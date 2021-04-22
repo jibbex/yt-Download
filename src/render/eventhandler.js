@@ -34,24 +34,10 @@ const events = {
     ev.preventDefault();
     send({command: 'select-path'})
   },
-<<<<<<< HEAD
   addUrlFromClipboard: async () => {
     if(validUrlTFunc()) {    
       const dlBtn = getElem('#download-btn');
       const {url, id, info} = await getInfo();
-=======
-  addUrlFromClipboard: async function() {
-    const dlBtn = getElem('#download-btn');
-    const url = clipboard.readText('text');
-  
-    if(ytdl.validateURL(url)) {
-      try {
-        const id = ytdl.getURLVideoID(url);
-        const info = (await ytdl.getBasicInfo(url)).videoDetails;
-  
-        card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
-        card.appendTo(getElem('#download-container'));
->>>>>>> 2f50ed0b6b8a53ab7d58f0e038000622ea92b37b
       
       const card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
       card.appendTo(getElem('#download-container'));
