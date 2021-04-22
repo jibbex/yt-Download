@@ -38,7 +38,6 @@ const events = {
     if(validUrlTFunc()) {    
       const dlBtn = getElem('#download-btn');
       const {url, id, info} = await getInfo();
-      
       const card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
       card.appendTo(getElem('#download-container'));
 
