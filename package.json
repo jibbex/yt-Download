@@ -1,7 +1,11 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
+<<<<<<< HEAD
+  "version": "1.5.0",
+=======
   "version": "1.4.2",
+>>>>>>> 2f50ed0b6b8a53ab7d58f0e038000622ea92b37b
   "description": "Downloads videos from Youtube",
   "company": "YT Download",
   "main": "src/main/index.js",
@@ -56,7 +60,11 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
+<<<<<<< HEAD
+            "version": "1.5.0",
+=======
             "version": "1.4.2",
+>>>>>>> 2f50ed0b6b8a53ab7d58f0e038000622ea92b37b
             "scripts": {
               "postinst": "./build/post_inst"
             },
@@ -73,7 +81,11 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
+<<<<<<< HEAD
+            "version": "1.5.0",
+=======
             "version": "1.4.2",
+>>>>>>> 2f50ed0b6b8a53ab7d58f0e038000622ea92b37b
             "license": "MIT",
             "section": "web"
           }
@@ -93,11 +105,13 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.50",
-    "@electron-forge/maker-deb": "6.0.0-beta.50",
-    "@electron-forge/maker-rpm": "6.0.0-beta.50",
     "@electron-forge/maker-squirrel": "6.0.0-beta.50",
     "@electron-forge/maker-zip": "6.0.0-beta.50",
+<<<<<<< HEAD
+    "electron": "^12.0.0"
+=======
     "electron": "^9.3.1"
+>>>>>>> 2f50ed0b6b8a53ab7d58f0e038000622ea92b37b
   },
   "browserslist": {
     "production": [
