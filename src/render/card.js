@@ -118,7 +118,7 @@ class Card {
     }
   
     this.cSelEl.appendChild(this.optDis);
-    this.cSelEl.appendChild(this.optMp3);
+    //this.cSelEl.appendChild(this.optMp3);
     this.cSelEl.appendChild(this.optMp4);
     this.cSelEl.appendChild(this.optWebm);
     this.cSelEl.appendChild(this.optMov);
@@ -231,5 +231,3 @@ class Card {
 Card.prototype.quality = 'high';
 Card.prototype.convert = false;
 Card.prototype.extendedMode = true;
-
-module.exports.Card = Card;
