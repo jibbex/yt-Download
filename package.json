@@ -1,7 +1,7 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
-  "version": "1.5.0-dev",
+  "version": "1.5.0",
   "description": "Downloads videos from Youtube",
   "company": "YT Download",
   "main": "src/main/index.js",
@@ -95,8 +95,7 @@
     "@electron-forge/cli": "6.0.0-beta.50",
     "@electron-forge/maker-squirrel": "6.0.0-beta.50",
     "@electron-forge/maker-zip": "6.0.0-beta.50",
-    "electron": "^11.0.0",
-    "license-checker": "^25.0.1"
+    "electron": "^12.0.0"
   },
   "browserslist": {
     "production": [
