@@ -118,7 +118,7 @@ class Card {
     }
   
     this.cSelEl.appendChild(this.optDis);
-    this.cSelEl.appendChild(this.optMp3);
+    //this.cSelEl.appendChild(this.optMp3);
     this.cSelEl.appendChild(this.optMp4);
     this.cSelEl.appendChild(this.optWebm);
     this.cSelEl.appendChild(this.optMov);

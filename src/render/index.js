@@ -9,6 +9,7 @@ const selectOption = (elem, val) => {
     }
   }
 }
+
 const createEl = (el, isTextNode = false) => {
   try {
     if(isTextNode)
@@ -20,6 +21,7 @@ const createEl = (el, isTextNode = false) => {
     return document.createTextNode(el);
   }
 }
+
 const animateCSS  = (element, animationName, callback)  => {
     const node = typeof(element) === 'object' ? element : document.querySelector(element)
     node.classList.add('animated', animationName)
@@ -33,15 +35,9 @@ const animateCSS  = (element, animationName, callback)  => {
 
     node.addEventListener('animationend', handleAnimationEnd)
 }
-const getElem = (query) => {
-  return document.querySelector(query);
-}
-const getElems = (query) => {
-  return document.querySelectorAll(query);
-}
 
 let timer = setInterval(() => {
-  if(electron.validateURL) {
+  if(validUrlTFunc()) {
     getElem('#add-btn').classList.add('pulse');
   }
   else {
@@ -93,121 +89,104 @@ function enableExtendedMode(enable = true) {
 
 ipc('message', (args) => {
   const { command, config } = args;
-  if(command == 'config') {
-    Card.prototype.quality = config.quality;
-    Card.prototype.convert = config.convert;
+  const dlBtn = getElem('#download-btn');
+  const elem = document.getElementById(args.elId);
 
-    getElem('.file-path').value = config.folder;
-    getElem('#accel-checkbox').checked = config.acceleration    
+  let pb;
+  let speedEl;
+  
+  switch(command) {
+    case 'config':
+      Card.prototype.quality = config.quality;
+      Card.prototype.convert = config.convert;
 
-    selectOption(getElem('#quality-select'), config.quality);
-    selectOption(getElem('#convert-select'), config.convert);
+      getElem('.file-path').value = config.folder;
+      getElem('#accel-checkbox').checked = config.acceleration    
 
-    M.updateTextFields();
+      selectOption(getElem('#quality-select'), config.quality);
+      selectOption(getElem('#convert-select'), config.convert);
 
-    if(!args.ffmpegInstalled) {
-      enableExtendedMode(false);
-      const modalFfmpeg = M.Modal.init(getElem('#modal-ffmpeg'), {dismissible:false });
-      modalFfmpeg.open();
-    }
-  }
-  if(command == 'saved') {  
-    Card.prototype.quality = config.quality;
-    Card.prototype.convert = config.convert;
-  }
-  if(command == 'remove') {
-    const dlBtn = getElem('#download-btn');
-    const elem = document.getElementById(args.elId);
-    progresses.delete(args.elId);
-    animateCSS(elem, 'zoomOut', () => {
-      const parent = getElem('#download-container');
-      parent.removeChild(elem);
-      dlBtn.disabled = false;
-      getElem('#add-btn').disabled = false;
-      getElem('#add-btn').classList.remove('hidden');
-      dlBtn.classList.remove('deactive');
-      if(dlBtn.classList.contains('scale-out') && getElem('#download-container').children.length > 0) {
-        dlBtn.classList.remove('scale-out');
+      M.updateTextFields();
+
+      if(!args.ffmpegInstalled) {
+        enableExtendedMode(false);
+        const modalFfmpeg = M.Modal.init(getElem('#modal-ffmpeg'), {dismissible:false });
+        modalFfmpeg.open();
       }
-      download();
-    })
-  }
-  if(command == 'progress') {
-    const dlBtn = getElem('#download-btn');
-    const elem = document.getElementById(args.elId);
-    const speedEl = elem.querySelector('.dl-speed');
-    const pb = progresses.get(args.elId);
-    
-    args.percent = args.percent <= 100 ? args.percent : 0;
-    
-    pb.set(args.percent / 100);
-    pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
-    
-    if(args.speed) {
-      if(!speedEl.style.display)
-        speedEl.style.display = 'inline';
+      break;
+    case 'save':
+      Card.prototype.quality = config.quality;
+      Card.prototype.convert = config.convert;
+      break;
+    case 'remove':            
+      progresses.delete(args.elId);
+
+      animateCSS(elem, 'zoomOut', () => {
+        const parent = getElem('#download-container');
+        parent.removeChild(elem);
+        dlBtn.disabled = false;
+        getElem('#add-btn').disabled = false;
+        getElem('#add-btn').classList.remove('hidden');
+        dlBtn.classList.remove('deactive');
+        if(dlBtn.classList.contains('scale-out') && getElem('#download-container').children.length > 0) {
+          dlBtn.classList.remove('scale-out');
+        }
+        download();
+      })
+      break;
+    case 'progress':
+      speedEl = elem.querySelector('.dl-speed');
+      pb = progresses.get(args.elId);
+      
+      args.percent = args.percent <= 100 ? args.percent : 0;
+      
+      pb.set(args.percent / 100);
+      pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
+      
+      if(args.speed) {
+        if(!speedEl.style.display)
+          speedEl.style.display = 'inline';
+          
+        const speed = (args.speed / 1000).toFixed(2);
         
-      const speed = (args.speed / 1000).toFixed(2);
-      
-      speedEl.innerHTML = speed > 999 
-                      ? (speed / 1000).toFixed(2) + ' MB/s' 
-                      : speed + 'KB/s';
-      
-    }
-    else {
-      speedEl.style.display = '';
-    }
-    
-    if(!dlBtn.classList.contains('deactive'))
-      dlBtn.classList.add('deactive');
-    elem.querySelector('.info-txt').innerHTML = `${args.job}`;
-  }
-  if(command == 'startConvert') {
-  }
-  if(command == 'downloaded') {
-    const elem = document.getElementById(args.elId);
-    const pb = progresses.get(args.elId);
-    const speedEl = elem.querySelector('.dl-speed');
-    pb.set(0);
-    pb.setText('');    
-    elem.querySelector('.info-txt').innerHTML = '';    
-    speedEl.innerHTML = '';
-    speedEl.style.display = '';
-  }
-  if(command == 'downloaded-FFmpeg') {
-    const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
-    modalLoading.close();
-    enableExtendedMode(true);
-  }
-  if(command == 'error') {
-    electron.send({command: 'error', error: err});
-  }
-  if(command == 'info') {
-    try {
-      const dlBtn = getElem('#download-btn');
-      
-      const {url, id, info} = args; 
-
-      console.log(url);
-      console.log(id);
-      console.log(info);
-      
-      card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
-      card.appendTo(getElem('#download-container'));
-
-      animateCSS(card.element, 'zoomIn');      
-
-      if(dlBtn.classList.contains('scale-out') && !dlBtn.classList.contains('deactive')) {
-        dlBtn.classList.remove('scale-out');
+        speedEl.innerHTML = speed > 999 
+                        ? (speed / 1000).toFixed(2) + ' MB/s' 
+                        : speed + 'KB/s';
+        
       }
-    }
-    catch(err) {        
-      electron.send({command: 'error', error: err});
-      console.error(err);
-    }
-  }
-  if(command == 'savedPath') {
-    document.querySelector('.file-path').value = args.path;
-    config.folder = args.path;
+      else {
+        speedEl.style.display = '';
+      }
+      
+      if(!dlBtn.classList.contains('deactive'))
+        dlBtn.classList.add('deactive');
+
+      elem.querySelector('.info-txt').innerHTML = `${args.job}`;
+      break;
+    case 'downloaded':
+      pb = progresses.get(args.elId);
+      speedEl = elem.querySelector('.dl-speed');
+
+      pb.set(0);
+      pb.setText('');         
+
+      speedEl.innerHTML = '';
+      speedEl.style.display = '';
+
+      elem.querySelector('.info-txt').innerHTML = '';  
+      break;
+    case 'downloaded-FFmpeg':
+      const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
+
+      modalLoading.close();
+      enableExtendedMode(true);
+      break;
+    case 'saved-path':
+      document.querySelector('.file-path').value = args.path;
+      config.folder = args.path;
+      break;
+    case 'error':
+      send({command: 'error', error: err});
+      break;
   }
 })

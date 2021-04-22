@@ -1,7 +1,9 @@
+const config = {};
 const progresses = new Map();
-let config = {};
 
 const events = {
+  config: config,
+  progresses: progresses,
   init: () => {
     document.addEventListener('DOMContentLoaded', function() {
       M.AutoInit();
@@ -14,15 +16,13 @@ const events = {
       }
     })
   },
-  progresses: progresses,
-  config: config,
-  pulseDeactivate: function(ev) {
+  pulseDeactivate: function() {
     clearInterval(timer);
     this.classList.remove('pulse');
   },
-  pulseActivate: function(ev) {
+  pulseActivate: () => {
     timer = setInterval(() => {
-      if(electron.validUrlTFunc()) {
+      if(validUrlTFunc()) {
         getElem('#add-btn').classList.add('pulse');
       }
       else {
@@ -32,38 +32,50 @@ const events = {
   },
   fileInputClickHandler: (ev) => {
     ev.preventDefault();
-    electron.send({command: 'selectPath'})
+    send({command: 'select-path'})
   },
-  addUrlFromClipboard: function() {
+  addUrlFromClipboard: async () => {
     if(validUrlTFunc()) {    
-      electron.getInfo();        
+      const dlBtn = getElem('#download-btn');
+      const {url, id, info} = await getInfo();
+      
+      const card = new Card({id: id, url: url, title: info.title, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`});
+      card.appendTo(getElem('#download-container'));
+
+      animateCSS(card.element, 'zoomIn');      
+
+      if(dlBtn.classList.contains('scale-out') && !dlBtn.classList.contains('deactive')) {
+        dlBtn.classList.remove('scale-out');
+      }    
+      
+      clearClipboard();
     }
     else {
-     electron.error('URL is not valid.');
+      error('URL is not valid.');
     }
   },
-  addBtnClickHandler: async function (ev) {
+  addBtnClickHandler: async () => {
     const addDropdownInst = M.Dropdown.getInstance(getElem('#add-btn'));
 
     if(addDropdownInst === undefined) {
       await addUrlFromClipboard();
     }
   },
-  changeSelectQualityHandler: function (ev) {
+  changeSelectQualityHandler: function() {
     config.quality = this.options[this.selectedIndex].value;
     Card.prototype.quality = config.quality;
-    electron.send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config: config});
   },
-  changeSelectConvertHandler: function (ev) {
+  changeSelectConvertHandler: function() {
     config.convert = this.options[this.selectedIndex].value;
     Card.prototype.convert = config.convert;
-    electron.send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config: config});
   },
-  changeAccelerationHandler: function (ev) {
+  changeAccelerationHandler: function() {
     config.acceleration = this.checked;
-    electron.send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config: config});
   },
-  inputWorkerHandler: function (ev) {
+  inputWorkerHandler: function() {
     let worker = this.value;
 
     if(worker > 10 || worker < 1) {
@@ -72,12 +84,9 @@ const events = {
 
     config.dlWorker = worker;
 
-    electron.send({command: 'saveConfig', config: config});
-  },
-  clickWorkerHandler: function (ev) {
-    this.select();
-  },
-  download: function () {
+    send({command: 'saveConfig', config: config});
+  },  
+  download: () => {
     const dlContainer = getElem('#download-container');
 
     if(dlContainer.children.length > 0) {
@@ -120,27 +129,24 @@ const events = {
       }))
 
       animateCSS(pbEl, 'bounceIn');
-      electron.send({command: 'download', item: item});
+      send({command: 'download', item: item});
 
       getElem('#add-btn').disabled = true;
+
       if(!dlBtn.classList.contains('scale-out')) {
         dlBtn.disabled = true;
         dlBtn.classList.add('scale-out');
       }
     }
     else {
-      electron.notify('All files downloaded.');
+      notify('All files downloaded.');
     }
-  },
-  downloadBtnClickHandler:
-  function (ev) {
-    events.download();
-  },
-  linkClickHandler: function (ev) {
+  },  
+  linkClickHandler: function(ev) {
     ev.preventDefault();
-    electron.shellOpen(this.href);
+    shellOpen(this.href);
   },
-  downloadFFmpegBtnClickHandler: function (ev) {
+  downloadFFmpegBtnClickHandler: (ev) => {
     const modalFfmpeg = M.Modal.getInstance(getElem('#modal-ffmpeg'));
     const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
 
@@ -150,9 +156,9 @@ const events = {
     getElem('#modal-loading-content').innerHTML = 'Please be patient while the FFmpeg binaries are downloading.';
     modalLoading.open();
 
-    electron.send({command: 'downloadFFmpeg'});
+    send({command: 'downloadFFmpeg'});
   },
-  downloadUpdateBtnClickHandler: function (ev) {
-    electron.shellOpen('https://ytdl.michm.de');
-  }
+  clickWorkerHandler: function() {return this.select()},
+  downloadBtnClickHandler: () => download(),  
+  downloadUpdateBtnClickHandler: () => shellOpen('https://ytdl.michm.de')  
 }
