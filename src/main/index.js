@@ -1,10 +1,19 @@
-const { app, BrowserWindow, ipcMain }           = require('electron');
-const path                                      = require('path');
-const { config }                                = require('./../utils');
+const {
+  app, 
+  BrowserWindow, 
+  ipcMain, 
+  dialog
+} = require('electron');
+
+const {config} = require('./../utils');
+const path = require('path');
+
 const { 
-        downloadFFmpeg, isFFmpegInstalled, 
-        ffmpeg, getBin 
-      }                                         = require('./ffmpeg');
+  downloadFFmpeg, 
+  isFFmpegInstalled, 
+  ffmpeg, 
+  getBin 
+} = require('./ffmpeg');
 
 let args = {};
 let mainWindow;
@@ -17,7 +26,7 @@ const DEV       = process.argv.includes('dev');
 const NO_FFMPEG = process.argv.includes('no-ffmpeg');
 
 if(process.platform === 'win32') {
-  app.setAppUserModelId('de.michm.yt-download');
+  app.setAppUserModelId('YT Download');
 }
 
 
@@ -32,7 +41,7 @@ const createWindow = async () => {
     await config.init();    
     ffmpeg.acceleration = config.acceleration || false;
   }
-  catch(error) { console.log(error) }
+  catch(error) { console.error(error) }
   
   mainWindow = new BrowserWindow({
     width: config.windowSize.width,
@@ -45,8 +54,8 @@ const createWindow = async () => {
     thickFrame: true,
     icon: path.join(__dirname + '/../../assets/images/ico.png'),
     webPreferences: {
-      nodeIntegration: true,
-			nodeIntegrationInWorker: true
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -114,36 +123,85 @@ app.on('activate', () => {
  * @param {Function(event, args)} callback
  */
 ipcMain.on('message', async (event, args) => {
-  if(args.command == 'getConfig') {
-    event.sender.send('message', {command: 'config', config: config});
-  }
-  if(args.command == 'saveConfig') {
-    try {
-      await config.save(args.config);
-      ffmpeg.acceleration = args.config.acceleration;
-      event.sender.send('message', {command: 'saved', config: config})
-    }
-    catch(err) {
-      throw err;
-    }
-  }
-  if(args.command == 'download') {    
-    let item = args.item;
-    item.path = config.folder;        
-    
-    ffmpeg.download(item);
-  }
-  if(args.command == 'downloadFFmpeg') {
-    try {             
-      const bins          = await downloadFFmpeg();
-      ffmpeg.bin.ffmpeg   = bins.ffmpeg;
-      ffmpeg.bin.ffprobe  = bins.ffprobe;
-      event.sender.send('message', {command: 'downloaded-FFmpeg'})
-    }
-    catch(err) {
-      console.log(err);
-      event.sender.send('message', {command: 'error', error: err.message});
-    }
+  switch(args.command) {
+    case 'getConfig': 
+      event.sender.send('message', {command: 'config', config: config});
+      break;
+    case 'saveConfig':
+      try {
+        await config.save(args.config);
+        ffmpeg.acceleration = args.config.acceleration;
+        event.sender.send('message', {command: 'saved', config: config})
+      }
+      catch(err) {
+        console.error(err);
+        dialog.showMessageBox(
+          mainWindow, {
+            type: 'error', 
+            title: 'Error', 
+            message: err.message
+          }
+        );
+      }
+      break;
+    case 'download':
+      let item = args.item;
+      item.path = config.folder;        
+      ffmpeg.download(item);
+      break;
+    case 'downloadFFmpeg':
+      try {             
+        const bins          = await downloadFFmpeg();
+        ffmpeg.bin.ffmpeg   = bins.ffmpeg;
+        ffmpeg.bin.ffprobe  = bins.ffprobe;
+        event.sender.send('message', {command: 'downloaded-FFmpeg'})
+      }
+      catch(err) {
+        console.error(err);
+        dialog.showMessageBox(
+          mainWindow, {
+            type: 'error', 
+            title: 'Error', 
+            message: err.message
+          }
+        );
+      }
+      break;
+    case 'select-path':
+      const path = await dialog.showOpenDialog(
+        mainWindow, 
+        {
+          defaultPath : config.folder, 
+          properties:["openDirectory"]
+        }
+      );
+      try {
+        if(path.filePaths[0] !== undefined) {
+          await config.save({folder: path.filePaths[0]});
+          event.sender.send('message', {command: 'saved-path', path: path.filePaths[0]})
+        }
+      }
+      catch(err) {
+        console.error(err);
+        dialog.showMessageBox(
+          mainWindow, {
+            type: 'error', 
+            title: 'Error', 
+            message: err.message
+          }
+        );
+      }   
+      break;
+    case 'error':
+      console.error(args.error);
+      dialog.showMessageBox(
+        mainWindow, {
+          type: 'error', 
+          title: 'Error', 
+          message: args.error.message
+        }
+      );
+      break;
   }
 })
 
