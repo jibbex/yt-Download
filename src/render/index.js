@@ -1,21 +1,49 @@
-const { 
-        ipcRenderer, clipboard, remote, shell, 
-      }               = require('electron');
-const { 
-        getElem, getElems, animateCSS, createEl, 
-        selectOption, validUrlTFunc 
-      }               = require('../src/render/utils');
-const { dialog }      = remote;
-const ytdl            = require('ytdl-core');
-const ProgressBar     = require('../node_modules/progressbar.js/dist/progressbar');
-const { version }     = require('../package.json');
-const { Card }        = require('../src/render/card');
-const events          = require('../src/render/eventhandler');
+const selectOption = (elem, val) => {
+  for(i = 0; i < elem.options.length; i++) {
+    if(elem.options[i].value == val) {
+      const selectEl = M.FormSelect.getInstance(elem);
+      elem.selectedIndex = i;
+      elem.options[i].selected = true;
+      selectEl.input.value = elem.options[i].innerHTML;
+      break;
+    }
+  }
+}
 
-let timer = setInterval(validUrlTFunc, 1000);
+const createEl = (el, isTextNode = false) => {
+  try {
+    if(isTextNode)
+      return document.createTextNode(el);
 
-Object.assign(this, events, ProgressBar);
-init();
+    return document.createElement(el);
+  }
+  catch(err) {
+    return document.createTextNode(el);
+  }
+}
+
+const animateCSS  = (element, animationName, callback)  => {
+    const node = typeof(element) === 'object' ? element : document.querySelector(element)
+    node.classList.add('animated', animationName)
+
+    function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+
+        if (typeof callback === 'function') callback()
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd)
+}
+
+let timer = setInterval(() => {
+  if(validUrlTFunc()) {
+    getElem('#add-btn').classList.add('pulse');
+  }
+  else {
+    getElem('#add-btn').classList.remove('pulse');
+  }
+},1000);
 
 getElem('#path-file-input').addEventListener('click', fileInputClickHandler);
 getElem('#add-btn').addEventListener('click', addBtnClickHandler);
@@ -59,95 +87,106 @@ function enableExtendedMode(enable = true) {
   Card.prototype.toggleExtendedMode();
 }
 
-ipcRenderer.on('message', (event, args) => {
+ipc('message', (args) => {
   const { command, config } = args;
-  if(command == 'config') {
-    Card.prototype.quality = config.quality;
-    Card.prototype.convert = config.convert;
+  const dlBtn = getElem('#download-btn');
+  const elem = document.getElementById(args.elId);
 
-    getElem('.file-path').value = config.folder;
-    getElem('#accel-checkbox').checked = config.acceleration    
+  let pb;
+  let speedEl;
+  
+  switch(command) {
+    case 'config':
+      Card.prototype.quality = config.quality;
+      Card.prototype.convert = config.convert;
 
-    selectOption(getElem('#quality-select'), config.quality);
-    selectOption(getElem('#convert-select'), config.convert);
+      getElem('.file-path').value = config.folder;
+      getElem('#accel-checkbox').checked = config.acceleration    
 
-    M.updateTextFields();
+      selectOption(getElem('#quality-select'), config.quality);
+      selectOption(getElem('#convert-select'), config.convert);
 
-    if(!args.ffmpegInstalled) {
-      enableExtendedMode(false);
-      const modalFfmpeg = M.Modal.init(getElem('#modal-ffmpeg'), {dismissible:false });
-      modalFfmpeg.open();
-    }
-  }
-  if(command == 'saved') {  
-    Card.prototype.quality = config.quality;
-    Card.prototype.convert = config.convert;
-  }
-  if(command == 'remove') {
-    const dlBtn = getElem('#download-btn');
-    const elem = document.getElementById(args.elId);
-    progresses.delete(args.elId);
-    animateCSS(elem, 'zoomOut', () => {
-      const parent = getElem('#download-container');
-      parent.removeChild(elem);
-      dlBtn.disabled = false;
-      getElem('#add-btn').disabled = false;
-      getElem('#add-btn').classList.remove('hidden');
-      dlBtn.classList.remove('deactive');
-      if(dlBtn.classList.contains('scale-out') && getElem('#download-container').children.length > 0) {
-        dlBtn.classList.remove('scale-out');
+      M.updateTextFields();
+
+      if(!args.ffmpegInstalled) {
+        enableExtendedMode(false);
+        const modalFfmpeg = M.Modal.init(getElem('#modal-ffmpeg'), {dismissible:false });
+        modalFfmpeg.open();
       }
-      download();
-    })
-  }
-  if(command == 'progress') {
-    const dlBtn = getElem('#download-btn');
-    const elem = document.getElementById(args.elId);
-    const speedEl = elem.querySelector('.dl-speed');
-    const pb = progresses.get(args.elId);
-    
-    args.percent = args.percent <= 100 ? args.percent : 0;
-    
-    pb.set(args.percent / 100);
-    pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
-    
-    if(args.speed) {
-      if(!speedEl.style.display)
-        speedEl.style.display = 'inline';
+      break;
+    case 'save':
+      Card.prototype.quality = config.quality;
+      Card.prototype.convert = config.convert;
+      break;
+    case 'remove':            
+      progresses.delete(args.elId);
+
+      animateCSS(elem, 'zoomOut', () => {
+        const parent = getElem('#download-container');
+        parent.removeChild(elem);
+        dlBtn.disabled = false;
+        getElem('#add-btn').disabled = false;
+        getElem('#add-btn').classList.remove('hidden');
+        dlBtn.classList.remove('deactive');
+        if(dlBtn.classList.contains('scale-out') && getElem('#download-container').children.length > 0) {
+          dlBtn.classList.remove('scale-out');
+        }
+        download();
+      })
+      break;
+    case 'progress':
+      speedEl = elem.querySelector('.dl-speed');
+      pb = progresses.get(args.elId);
+      
+      args.percent = args.percent <= 100 ? args.percent : 0;
+      
+      pb.set(args.percent / 100);
+      pb.setText(`${(!isNaN(args.percent) ? args.percent : 0.00)} %`);
+      
+      if(args.speed) {
+        if(!speedEl.style.display)
+          speedEl.style.display = 'inline';
+          
+        const speed = (args.speed / 1000).toFixed(2);
         
-      const speed = (args.speed / 1000).toFixed(2);
+        speedEl.innerHTML = speed > 999 
+                        ? (speed / 1000).toFixed(2) + ' MB/s' 
+                        : speed + 'KB/s';
+        
+      }
+      else {
+        speedEl.style.display = '';
+      }
       
-      speedEl.innerHTML = speed > 999 
-                      ? (speed / 1000).toFixed(2) + ' MB/s' 
-                      : speed + 'KB/s';
-      
-    }
-    else {
+      if(!dlBtn.classList.contains('deactive'))
+        dlBtn.classList.add('deactive');
+
+      elem.querySelector('.info-txt').innerHTML = `${args.job}`;
+      break;
+    case 'downloaded':
+      pb = progresses.get(args.elId);
+      speedEl = elem.querySelector('.dl-speed');
+
+      pb.set(0);
+      pb.setText('');         
+
+      speedEl.innerHTML = '';
       speedEl.style.display = '';
-    }
-    
-    if(!dlBtn.classList.contains('deactive'))
-      dlBtn.classList.add('deactive');
-    elem.querySelector('.info-txt').innerHTML = `${args.job}`;
-  }
-  if(command == 'startConvert') {
-  }
-  if(command == 'downloaded') {
-    const elem = document.getElementById(args.elId);
-    const pb = progresses.get(args.elId);
-    const speedEl = elem.querySelector('.dl-speed');
-    pb.set(0);
-    pb.setText('');    
-    elem.querySelector('.info-txt').innerHTML = '';    
-    speedEl.innerHTML = '';
-    speedEl.style.display = '';
-  }
-  if(command == 'downloaded-FFmpeg') {
-    const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
-    modalLoading.close();
-    enableExtendedMode(true);
-  }
-  if(command == 'error') {
-    dialog.showMessageBox(remote.getCurrentWindow(), {type: 'error', title: 'Error', message: args.error.message});
+
+      elem.querySelector('.info-txt').innerHTML = '';  
+      break;
+    case 'downloaded-FFmpeg':
+      const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
+
+      modalLoading.close();
+      enableExtendedMode(true);
+      break;
+    case 'saved-path':
+      document.querySelector('.file-path').value = args.path;
+      events.config.folder = args.path;
+      break;
+    case 'error':
+      send({command: 'error', error: err});
+      break;
   }
 })
