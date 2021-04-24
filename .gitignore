@@ -59,7 +59,7 @@ typings/
 
 # next.js build output
 .next
-
+yarn.lock
 src/render/.card.js
 src/main/.ffmpeg.js
 ffmpeg

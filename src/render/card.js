@@ -56,13 +56,13 @@ class Card {
     if(this.title.length > 88)
       shortTitle = `${this.title.substr(0,89)} ...`;
   
-    qElLabel.appendChild(createEl('Quality'));
+    qElLabel.appendChild(createEl('Quality', true));
     this.optHigh.value = 'high';
-    this.optHigh.appendChild(createEl('High'));
+    this.optHigh.appendChild(createEl('High', true));
     this.optMedium.value = 'medium';
-    this.optMedium.appendChild(createEl('Medium'));
+    this.optMedium.appendChild(createEl('Medium', true));
     this.optLow.value = 'low';
-    this.optLow.appendChild(createEl('Low'));
+    this.optLow.appendChild(createEl('Low', true));
   
     switch(this.quality) {
       case 'high':
@@ -82,19 +82,19 @@ class Card {
     qEl.appendChild(this.qSelEl);
     qEl.appendChild(qElLabel);
   
-    cElLabel.appendChild(createEl('Convert to'));
+    cElLabel.appendChild(createEl('Convert to', true));
     this.optDis.value = '';
-    this.optDis.appendChild(createEl('Disabled'));
+    this.optDis.appendChild(createEl('Disabled', true));
     this.optMp3.value = 'mp3';
-    this.optMp3.appendChild(createEl('MP3'));
+    this.optMp3.appendChild(createEl('MP3', true));
     this.optMp4.value = 'mkv';
-    this.optMp4.appendChild(createEl('MKV'));
+    this.optMp4.appendChild(createEl('MKV', true));
     this.optWebm.value = 'webm';
-    this.optWebm.appendChild(createEl('WEBM'));
+    this.optWebm.appendChild(createEl('WEBM', true));
     this.optMov.value = 'mov';
-    this.optMov.appendChild(createEl('MOV'));
+    this.optMov.appendChild(createEl('MOV', true));
     this.optMpeg.value = 'mpeg';
-    this.optMpeg.appendChild(createEl('MPEG'));
+    this.optMpeg.appendChild(createEl('MPEG', true));
   
     switch(this.convert) {
       case 'mp3':
@@ -147,9 +147,9 @@ class Card {
     thumbEl.classList.add('card-image', 'waves-effect', 'waves-block', 'waves-light');
     titleEl.title = this.title;
     thumbEl.appendChild(this.image);
-    titleEl.appendChild(createEl(shortTitle));
+    titleEl.appendChild(createEl(shortTitle, true));
     titleEl.appendChild(moreIco);
-    titleElOpt.appendChild(createEl('Options'));
+    titleElOpt.appendChild(createEl('Options', true));
     titleElOpt.appendChild(closeIco);
     infoEl.classList.add('info');
     infoTxt.classList.add('info-txt');

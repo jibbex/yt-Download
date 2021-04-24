@@ -22,15 +22,19 @@ const selectOption = (elem, val) => {
 /**
  * Shorthand for creating elements and text nodes.
  *
- * @param {string} elementType
+ * @param {string} type
+ * @param {bool} isTextNode
  */
 
-const createEl = (elementType) => {
+const createEl = (type, isTextNode = false) => {
   try {
-    return document.createElement(elementType);
+    if(isTextNode)
+      return document.createTextNode(type);
+
+    return document.createElement(type);
   }
   catch(err) {
-    return document.createTextNode(elementType);
+    return document.createTextNode(type);
   }
 }
 
@@ -255,7 +259,7 @@ ipc('message', (args) => {
       break;
 
     case 'saved-path':
-      document.querySelector('.file-path').value = args.path;
+      getElem('.file-path').value = args.path;
       events.config.folder = args.path;
       break;
 

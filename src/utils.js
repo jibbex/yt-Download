@@ -42,9 +42,12 @@ class Config {
   
   get Obj() {
     const config = {};
+
     Object.assign(config, this)
+
     delete config.DIRECTORY;
     delete config.CONFIG_FILE;
+    
     return config;
   }
   

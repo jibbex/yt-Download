@@ -50,7 +50,7 @@ const events = {
       clearClipboard();
     }
     else {
-      error('URL is not valid.');
+      send({command: 'error', error: new Error('URL is not valid.')});
     }
   },
   addBtnClickHandler: async () => {
