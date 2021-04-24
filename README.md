@@ -16,9 +16,11 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
-### New in v1.5.0
-* Render thread works now in context isolation
+### New in v1.5.1
+* Render process runs now in context isolation
 * Support for Electron > 11
+* Removed unused code
+* Updated dependencies (e.g. Electron 12.0.5)
 
 ### New in v1.4.0
 
