@@ -5,17 +5,15 @@ const {
   dialog
 } = require('electron');
 
-const {config} = require('./../utils');
-const path = require('path');
-
 const { 
   downloadFFmpeg, 
   isFFmpegInstalled, 
-  ffmpeg, 
-  getBin 
+  ffmpeg
 } = require('./ffmpeg');
 
-let args = {};
+const {config} = require('./../utils');
+const path = require('path');
+
 let mainWindow;
 
 if(require('electron-squirrel-startup')) {
@@ -29,11 +27,11 @@ if(process.platform === 'win32') {
   app.setAppUserModelId('YT Download');
 }
 
-
 /**
- * App on ready eventhandler callback
+ * App eventhandler
  *
  */
+
 const createWindow = async () => {
   const ffmpegFound = (NO_FFMPEG) ? false : isFFmpegInstalled();  
   
@@ -117,16 +115,18 @@ app.on('activate', () => {
 });
 
 /**
- * Async communication with the render thread
+ * Async communication with render proc
  *
- * @param {string} event
+ * @param {string} channel
  * @param {Function(event, args)} callback
  */
+
 ipcMain.on('message', async (event, args) => {
   switch(args.command) {
     case 'getConfig': 
       event.sender.send('message', {command: 'config', config: config});
       break;
+
     case 'saveConfig':
       try {
         await config.save(args.config);
@@ -144,11 +144,13 @@ ipcMain.on('message', async (event, args) => {
         );
       }
       break;
+
     case 'download':
       let item = args.item;
       item.path = config.folder;        
       ffmpeg.download(item);
       break;
+
     case 'downloadFFmpeg':
       try {             
         const bins          = await downloadFFmpeg();
@@ -167,6 +169,7 @@ ipcMain.on('message', async (event, args) => {
         );
       }
       break;
+
     case 'select-path':
       const path = await dialog.showOpenDialog(
         mainWindow, 
@@ -192,6 +195,7 @@ ipcMain.on('message', async (event, args) => {
         );
       }   
       break;
+
     case 'error':
       console.error(args.error);
       dialog.showMessageBox(
@@ -205,52 +209,55 @@ ipcMain.on('message', async (event, args) => {
   }
 })
 
+/**
+ * FFmpeg eventhandler
+ *
+ * @param {string} event
+ * @param {Function(...args)} callback
+ */
+
 ffmpeg.on('download-end', (info) => {
-  setImmediate(() => {
-    if(DEV) {
-      console.log(info);  
-    }
-    mainWindow.webContents.send('message', {command: 'downloaded', elId: info.elemId});
-  });
+  if(DEV) {
+    console.log(info);  
+  }
+
+  mainWindow.webContents.send('message', {command: 'downloaded', elId: info.elemId});
 })
 
 ffmpeg.on('progress', (prog) => {
-  setImmediate(() => {
-    if(DEV) {
-      console.log(prog);  
-    }
-    if(mainWindow) {
-      mainWindow.setProgressBar(prog.progress / 100);
-      mainWindow.webContents.send(
-            'message', 
-            {
-              command: 'progress', 
-              job: prog.job, 
-              percent: prog.progress,
-              elId: prog.elemId,
-              speed: prog.speed
-            }
-          );
-      } 
-    });       
+  if(DEV) {
+    console.log(prog);  
+  }
+
+  if(mainWindow) {
+    mainWindow.setProgressBar(prog.progress / 100);
+    mainWindow.webContents.send(
+      'message', 
+      {
+        command: 'progress', 
+        job: prog.job, 
+        percent: prog.progress,
+        elId: prog.elemId,
+        speed: prog.speed
+      }
+    );
+    }     
 })
 
 ffmpeg.on('finished', (id) => {
-  setImmediate(() => {
-    if(DEV) {
-      console.log(id);  
-    }
-    mainWindow.setProgressBar(0);
-    mainWindow.webContents.send('message', {command: 'remove', elId: id});
-  });  
+  if(DEV) {
+    console.log(id);  
+  }
+
+  mainWindow.setProgressBar(0);
+  mainWindow.webContents.send('message', {command: 'remove', elId: id}); 
 })
 
 ffmpeg.on('error', (error) => {
-  setImmediate(() => {
-    if(DEV) {
-      console.log(error);  
-    }
-    mainWindow.setProgressBar(0);
-    mainWindow.webContents.send('message', {command: 'error', error: error.message});
-  });
+  if(DEV) {
+    console.error(error);  
+  }
+
+  mainWindow.setProgressBar(0);
+  mainWindow.webContents.send('message', {command: 'error', error: error.message});
 })

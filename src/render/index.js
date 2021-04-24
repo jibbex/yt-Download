@@ -1,7 +1,16 @@
+/**
+ * Helper function to select a option
+ * from a Materialize combo box
+ *
+ * @param {object} elem
+ * @param {string} val
+ */
+
 const selectOption = (elem, val) => {
   for(i = 0; i < elem.options.length; i++) {
     if(elem.options[i].value == val) {
       const selectEl = M.FormSelect.getInstance(elem);
+
       elem.selectedIndex = i;
       elem.options[i].selected = true;
       selectEl.input.value = elem.options[i].innerHTML;
@@ -10,31 +19,67 @@ const selectOption = (elem, val) => {
   }
 }
 
-const createEl = (el, isTextNode = false) => {
-  try {
-    if(isTextNode)
-      return document.createTextNode(el);
+/**
+ * Shorthand for creating elements and text nodes.
+ *
+ * @param {string} elementType
+ */
 
-    return document.createElement(el);
+const createEl = (elementType) => {
+  try {
+    return document.createElement(elementType);
   }
   catch(err) {
-    return document.createTextNode(el);
+    return document.createTextNode(elementType);
   }
 }
 
+/**
+ * Shorthand for querySelector
+ *
+ * @param {string} query
+ */
+
+const getElem = (query) => {
+  return document.querySelector(query)
+}
+
+/**
+ * Shorthand for querySelectorAll
+ *
+ * @param {string} query
+ */
+
+const getElems = (query) => {
+  return document.querySelectorAll(query)
+}
+
+/**
+ * Helper function for animate.css
+ *
+ * @param {object} element
+ * @param {string} animatonName
+ * @param {function} callback
+ */
+
 const animateCSS  = (element, animationName, callback)  => {
-    const node = typeof(element) === 'object' ? element : document.querySelector(element)
-    node.classList.add('animated', animationName)
+    const node = typeof(element) === 'object' ? element : getElem(element);
+    node.classList.add('animated', animationName);
 
     function handleAnimationEnd() {
-        node.classList.remove('animated', animationName)
-        node.removeEventListener('animationend', handleAnimationEnd)
+        node.classList.remove('animated', animationName);
+        node.removeEventListener('animationend', handleAnimationEnd);
 
-        if (typeof callback === 'function') callback()
+        if (typeof callback === 'function') callback();
     }
 
     node.addEventListener('animationend', handleAnimationEnd)
 }
+
+/**
+ * clipboard polling
+ *
+ */
 
 let timer = setInterval(() => {
   if(validUrlTFunc()) {
@@ -43,7 +88,12 @@ let timer = setInterval(() => {
   else {
     getElem('#add-btn').classList.remove('pulse');
   }
-},1000);
+}, 1000);
+
+/**
+ * UI eventhandler
+ *
+ */
 
 getElem('#path-file-input').addEventListener('click', fileInputClickHandler);
 getElem('#add-btn').addEventListener('click', addBtnClickHandler);
@@ -57,8 +107,18 @@ getElem('#modal-ffmpeg a').addEventListener('click', linkClickHandler);
 getElem('#btn-download-ffmpeg').addEventListener('click', downloadFFmpegBtnClickHandler);
 getElem('#download-update-btn').addEventListener('click', downloadUpdateBtnClickHandler);
 
-getElem('#year').innerHTML = new Date().getFullYear();
+/**
+ * ---
+ */
+
+getElem('#year').innerHTML = '2021';
 getElem('#version').innerHTML = version;
+
+/**
+ * De-/activates features that require FFmpeg 
+ *
+ * @param {bool} enable
+ */
 
 function enableExtendedMode(enable = true) {
   if(!enable) {
@@ -87,6 +147,13 @@ function enableExtendedMode(enable = true) {
   Card.prototype.toggleExtendedMode();
 }
 
+/**
+ * Async communication with main proc
+ *
+ * @param {string} channel
+ * @param {Function({args)} callback
+ */
+
 ipc('message', (args) => {
   const { command, config } = args;
   const dlBtn = getElem('#download-btn');
@@ -114,10 +181,12 @@ ipc('message', (args) => {
         modalFfmpeg.open();
       }
       break;
+
     case 'save':
       Card.prototype.quality = config.quality;
       Card.prototype.convert = config.convert;
       break;
+
     case 'remove':            
       progresses.delete(args.elId);
 
@@ -134,6 +203,7 @@ ipc('message', (args) => {
         download();
       })
       break;
+
     case 'progress':
       speedEl = elem.querySelector('.dl-speed');
       pb = progresses.get(args.elId);
@@ -163,6 +233,7 @@ ipc('message', (args) => {
 
       elem.querySelector('.info-txt').innerHTML = `${args.job}`;
       break;
+
     case 'downloaded':
       pb = progresses.get(args.elId);
       speedEl = elem.querySelector('.dl-speed');
@@ -175,16 +246,19 @@ ipc('message', (args) => {
 
       elem.querySelector('.info-txt').innerHTML = '';  
       break;
+
     case 'downloaded-FFmpeg':
       const modalLoading = M.Modal.getInstance(getElem('#modal-loading'));
 
       modalLoading.close();
       enableExtendedMode(true);
       break;
+
     case 'saved-path':
       document.querySelector('.file-path').value = args.path;
       events.config.folder = args.path;
       break;
+
     case 'error':
       send({command: 'error', error: err});
       break;

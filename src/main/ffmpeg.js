@@ -466,12 +466,14 @@ class FFmpeg extends EventEmitter {
       return;
     }
     
-    execAsync(`${this.bin.ffmpeg} -hwaccels`).then(({ stdout }) => {
-      const lines = stdout.split(os.EOL);
-      this.accels = new Set(lines.slice(1, lines.length - 2));
-    }).catch(error => {
-      throw error;
-    });
+    execAsync(`${this.bin.ffmpeg} -hwaccels`)
+      .then(({ stdout }) => {
+        const lines = stdout.split(os.EOL);
+        this.accels = new Set(lines.slice(1, lines.length - 2));
+      })
+      .catch(error => {
+        throw error;
+      });
   }
   
   get acceleration() {
