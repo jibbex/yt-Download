@@ -1,10 +1,8 @@
 <img src="https://raw.githubusercontent.com/jibbex/yt-Download/master/assets/images/icon-512.png" align="right" width="164" height="164">
 
 # YT Download
-
+<img alt="GitHub Workflow Status (event)" src="https://img.shields.io/github/workflow/status/jibbex/yt-Download/build?event=push" align="right"><img alt="GitHub package.json dependency version (dev dep on branch)" src="https://img.shields.io/github/package-json/dependency-version/jibbex/yt-Download/dev/electron" align="right">
 *Downloads videos from Youtube.*
-
-Pre-compiled builds and more information can be found at [ytdl.michm.de](https://ytdl.michm.de).
 
 ### Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
@@ -15,9 +13,11 @@ This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://elec
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
-### New in v1.5.0
-* Render thread works now in context isolation
+### New in v1.5.1
+* Render process runs now in context isolation
 * Support for Electron > 11
+* Removed unused code
+* Updated dependencies (e.g. Electron 12.0.5)
 
 ### New in v1.4.0
 
