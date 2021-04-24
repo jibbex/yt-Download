@@ -5,8 +5,6 @@
 
 *Downloads videos from Youtube.*
 
-Pre-compiled builds and more information can be found at [ytdl.michm.de](https://ytdl.michm.de).
-
 ### Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
 
