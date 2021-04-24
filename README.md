@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/jibbex/yt-Download/master/assets/images/icon-512.png" align="right" width="164" height="164">
 
 # YT Download
-
+<img alt="GitHub Workflow Status (event)" src="https://img.shields.io/github/workflow/status/jibbex/yt-Download/build?event=push" align="right">
 *Downloads videos from Youtube.*
 
 Pre-compiled builds and more information can be found at [ytdl.michm.de](https://ytdl.michm.de).
