@@ -89,7 +89,8 @@
     "materialize-css": "^1.0.0",
     "progressbar.js": "^1.1.0",
     "tree-kill": "^1.2.2",
-    "ytdl-core": "^4.5.0"
+    "ytdl-core": "^4.5.0",    
+    "trim-newlines": ">=3.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.54",
