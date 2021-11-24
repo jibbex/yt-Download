@@ -28,6 +28,31 @@
       },
       "makers": [
         {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "linux",
+            "win32"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "maintainer": "Manfred Michaelis",
+            "homepage": "https://michm.de",
+            "icon": "./assets/images/icon.png",
+            "name": "yt-download",
+            "productName": "YT Download",
+            "description": "Downloads videos from Youtube",
+            "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
+            "version": "1.5.2",
+            "scripts": {
+              "postinst": "./build/post_inst"
+            },
+            "section": "web"
+          }
+        },
+        {
           "name": "@electron-forge/maker-deb",
           "config": {
             "maintainer": "Manfred Michaelis",
