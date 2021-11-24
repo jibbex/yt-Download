@@ -7,40 +7,18 @@
 
 *Downloads videos from Youtube.*
 
-### Node.js and Electron
+## Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
 
 
-### FFmpeg
+## FFmpeg
 *[FFmpeg](https://www.ffmpeg.org/) is required to download HD quality videos and convert files. YT Download also works with limited functionality without FFmpeg.*
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
-### New in v1.5.1
-* Render process runs now in context isolation
-* Support for Electron > 11
-* Removed unused code
-* Updated dependencies (e.g. Electron 12.0.5)
-
-### New in v1.4.0
-
-* The mess that was *./main/ffmpeg.js* was fixed.
-* Audio and video downloads are now shown in one progress bar.
-* Added proper progress for media conversion.
-* The download speed is now displayed.
-* Added support for hardware accelerated encoding. *(Tries to find the optimal mode automatically)*
-* Some UI improvements.
-
-### New in v1.0.0
-
-* New UI build on [Materialize](https://materializecss.com/) framework
-* Downloading from Youtube in HD quality if possible
-* Converting to ~~MP3~~, MKV, WEBM, MOV and MPEG
-* Select quality of the download
-* Easy package and installer building with [Electron Forge](https://github.com/electron-userland/electron-forge)
-
 ---
-#### Initialize
+
+## Initialize
 ```
 npm install
 ```
@@ -49,7 +27,7 @@ npm install
 yarn install
 ```
 
-#### Starting YT Download
+## Starting YT Download
 To start the release version enter
 ```
 npm start
@@ -69,7 +47,7 @@ yarn test
 ```
 
 ---
-#### Create package
+## Create package
 ```
 npm run package
 ```
@@ -78,7 +56,7 @@ npm run package
 yarn package
 ```
 
-#### Create installer
+## Create installer
 ```
 npm run make
 ```
@@ -86,3 +64,34 @@ npm run make
 ```
 yarn make
 ```
+
+---
+
+## Changelog
+
+### v1.5.31
+* Fix for slow downloads
+
+### v1.5.1
+
+* Render process runs now in context isolation
+* Support for Electron > 11
+* Removed unused code
+* Updated dependencies (e.g. Electron 12.0.5)
+
+### v1.4.0
+
+* The mess that was *./main/ffmpeg.js* was fixed.
+* Audio and video downloads are now shown in one progress bar.
+* Added proper progress for media conversion.
+* The download speed is now displayed.
+* Added support for hardware accelerated encoding. *(Tries to find the optimal mode automatically)*
+* Some UI improvements.
+
+### v1.0.0
+
+* New UI build on [Materialize](https://materializecss.com/) framework
+* Downloading from Youtube in HD quality if possible
+* Converting to ~~MP3~~, MKV, WEBM, MOV and MPEG
+* Select quality of the download
+* Easy package and installer building with [Electron Forge](https://github.com/electron-userland/electron-forge)
