@@ -1,7 +1,7 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
-  "version": "1.5.3",
+  "version": "1.5.31",
   "description": "Downloads videos from Youtube",
   "company": "YT Download",
   "main": "src/main/index.js",
@@ -28,25 +28,6 @@
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "yt-download",
-            "exe": "yt-download.exe",
-            "iconUrl": "file:///D:/Users/m_mic/Data/Projekte/yt-Download_v1.0/yt-download/assets/images/icon.ico",
-            "setupIcon": "./assets/images/icon.ico",
-            "loadingGif": "./assets/images/install.gif",
-            "company": "YT Download"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin",
-            "linux",
-            "win32"
-          ]
-        },
-        {
           "name": "@electron-forge/maker-deb",
           "config": {
             "maintainer": "Manfred Michaelis",
@@ -56,7 +37,7 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.5.2",
+            "version": "1.5.31",
             "scripts": {
               "postinst": "./build/post_inst"
             },
@@ -73,7 +54,7 @@
             "productName": "YT Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.5.2",
+            "version": "1.5.31",
             "license": "MIT",
             "section": "web"
           }
@@ -90,7 +71,7 @@
     "normalize-url": ">=4.5.1",
     "progressbar.js": "^1.1.0",
     "tree-kill": "^1.2.2",
-    "ytdl-core": "^4.8.3"
+    "ytdl-core": "gatecrasher777/node-ytdl-core"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
