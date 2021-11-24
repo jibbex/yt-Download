@@ -7,18 +7,34 @@
 
 *Downloads videos from Youtube.*
 
-## Node.js and Electron
+### Table of contents
+- [YT Download](#yt-download)
+    + [Table of contents](#table-of-contents)
+    + [Node.js and Electron](#nodejs-and-electron)
+    + [FFmpeg](#ffmpeg)
+  * [Quickstart](#quickstart)
+    + [Initialize](#initialize)
+    + [Starting YT Download](#starting-yt-download)
+    + [Create package](#create-package)
+    + [Create installer](#create-installer)
+  * [Changelog](#changelog)
+    + [v1.5.31](#v1531)
+    + [v1.5.1](#v151)
+    + [v1.4.0](#v140)
+    + [v1.0.0](#v100)
+
+### Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
 
 
-## FFmpeg
+### FFmpeg
 *[FFmpeg](https://www.ffmpeg.org/) is required to download HD quality videos and convert files. YT Download also works with limited functionality without FFmpeg.*
 
 **if FFmpeg was not found, YT Download will ask you if you want to download it. In this case you don't need to worry about setting the environment variables.**
 
----
+## Quickstart
 
-## Initialize
+### Initialize
 ```
 npm install
 ```
@@ -27,7 +43,7 @@ npm install
 yarn install
 ```
 
-## Starting YT Download
+### Starting YT Download
 To start the release version enter
 ```
 npm start
@@ -46,8 +62,7 @@ npm test
 yarn test
 ```
 
----
-## Create package
+### Create package
 ```
 npm run package
 ```
@@ -56,7 +71,7 @@ npm run package
 yarn package
 ```
 
-## Create installer
+### Create installer
 ```
 npm run make
 ```
@@ -64,8 +79,6 @@ npm run make
 ```
 yarn make
 ```
-
----
 
 ## Changelog
 
