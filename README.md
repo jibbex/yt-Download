@@ -19,6 +19,7 @@
     + [Create installer](#create-installer)
   * [Changelog](#changelog)
     + [v1.5.31](#v1531)
+    + [v1.5.3](#v153)
     + [v1.5.1](#v151)
     + [v1.4.0](#v140)
     + [v1.0.0](#v100)
@@ -83,7 +84,12 @@ yarn make
 ## Changelog
 
 ### v1.5.31
-* Fix for slow downloads
+
+ * Fix for slow downloads
+
+### v1.5.3
+
+ * Update due to YouTube API changes.
 
 ### v1.5.1
 
