@@ -64,3 +64,4 @@ src/render/.card.js
 src/main/.ffmpeg.js
 ffmpeg
 out
+package.json.bck
