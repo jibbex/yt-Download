@@ -18,6 +18,7 @@
     + [Create package](#create-package)
     + [Create installer](#create-installer)
   * [Changelog](#changelog)
+    + [v1.5.32](#v1532)
     + [v1.5.31](#v1531)
     + [v1.5.3](#v153)
     + [v1.5.1](#v151)
@@ -82,6 +83,10 @@ yarn make
 ```
 
 ## Changelog
+
+### v1.5.32
+
+ * Fixed slow downloads again
 
 ### v1.5.31
 
