@@ -14,13 +14,12 @@ exports = contextBridge.exposeInMainWorld(
     getInfo: async function() { 
       try {
         const url = clipboard.readText('text');
-        const video = {
+                
+        return {
           url: url,
           id: ytdl.getURLVideoID(url),
           info: (await ytdl.getBasicInfo(url)).videoDetails
         };
-                
-        return video;
       }      
       catch(error) {
         ipcRenderer.send('message', {command: 'error', error: error});
