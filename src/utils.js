@@ -18,10 +18,10 @@ function removeSpecials(str) {
 class Config {
   constructor() {
     const DIR       = path.join(
-                        (process.platform == 'win32' 
+                        (process.platform === 'win32' 
                             ? process.env.USERPROFILE 
                             : process.env['HOME'])
-                        ,'/yt-download'
+                        ,'/.yt-download'
                       );
     const FILE        = path.join(DIR, '/conf.json');
     
@@ -53,7 +53,7 @@ class Config {
   
   async init() {
     try {
-      await fs.mkdir(this.DIRECTORY, { recursive: false });        
+      await fs.mkdir(this.DIRECTORY);        
     }
     catch(error) {
       if(error.code !== 'EEXIST') {
@@ -62,14 +62,24 @@ class Config {
     }
     finally {
       try {
-        const config = JSON.parse((await fs.readFile(this.CONFIG_FILE)));
-        Object.assign(this, config);
+        const config = JSON.parse((await fs.readFile(this.CONFIG_FILE)));        
+        Object.assign(this, config);        
       }
       catch(error) {
-        await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj, {flag: 'ax'}));
-        return this;
+        await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj, {flag: 'ax'}));        
+      }
+
+      try {
+        await fs.stat(this.folder);
+      } 
+      catch(error) {
+        if(error.code === 'EEXIST') {
+            await fs.mkdir(this.folder, { recursive: true });
+        }   
       }
     }
+
+    return this;
   }
   
   async save(config) {
