@@ -13,7 +13,7 @@ const path                = require('path');
 const ytdl                = require('ytdl-core');
 const { removeSpecials }  = require('./../utils');
 
-const downloadFFmpeg    	= promisify(ffbinaries.downloadFiles);
+const downloadFFmpeg      = promisify(ffbinaries.downloadFiles);
 const execAsync           = promisify(exec);
 const TEMP_DIR            = path.join(app.getPath('temp'));
 const CODECS              = {
