@@ -18,6 +18,8 @@
     + [Create package](#create-package)
     + [Create installer](#create-installer)
   * [Changelog](#changelog)
+    + [v1.5.4](#v154)
+    + [v1.5.32](#v1532)
     + [v1.5.31](#v1531)
     + [v1.5.3](#v153)
     + [v1.5.1](#v151)
@@ -83,9 +85,20 @@ yarn make
 
 ## Changelog
 
+### v1.5.4
+
+ * Update to Electron 17.0.1
+ * Updated serveral further dependencies.
+ * Precompiled binary packages for Linux are available again.
+ * If the download directory doesn't exist, it will be created now.
+ 
+### v1.5.32
+
+ * Fix for slow downloads... again.
+
 ### v1.5.31
 
- * Fix for slow downloads
+ * Fix for slow downloads. 
 
 ### v1.5.3
 
@@ -93,10 +106,10 @@ yarn make
 
 ### v1.5.1
 
-* Render process runs now in context isolation
-* Support for Electron > 11
-* Removed unused code
-* Updated dependencies (e.g. Electron 12.0.5)
+* Render process runs now in context isolation.
+* Support for Electron > 11.
+* Removed unused code.
+* Updated dependencies (e.g. Electron 12.0.5).
 
 ### v1.4.0
 
