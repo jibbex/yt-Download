@@ -33,85 +33,85 @@ if(process.platform === 'win32') {
  */
 
 const createWindow = async () => {
-  const ffmpegFound = (NO_FFMPEG) ? false : isFFmpegInstalled();  
-  
-  try {    
-    await config.init();    
-    ffmpeg.acceleration = config.acceleration || false;
-  }
-  catch(error) { console.error(error) }
-  
-  mainWindow = new BrowserWindow({
-    width: config.windowSize.width,
-    height: config.windowSize.height,
-    minWidth: DEV ? 0 : 640,
-    minHeight: DEV ? 0 : 864,
-    show: false,
-    center: true,
-    nativeWindowOpen: true,
-    thickFrame: true,
-    icon: path.join(__dirname + '/../../assets/images/ico.png'),
-    webPreferences: {
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+    const ffmpegFound = (NO_FFMPEG) ? false : isFFmpegInstalled();  
+
+    try {    
+        await config.init();    
+        ffmpeg.acceleration = config.acceleration || false;
     }
-  });
+    catch(error) { 
+        console.error(error);
+    }
 
-  mainWindow.setMenu(null);
-  mainWindow.setMenuBarVisibility(false);
-  mainWindow.loadURL(`file://${__dirname}/../../assets/index.html`);
-
-  if(DEV) {
-    mainWindow.webContents.openDevTools();
-  }
-  
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  mainWindow.on('close', async () => {
-		try {
-      const sizes = mainWindow.getSize();      
-                        
-			await config.save({
-        windowSize: {
-          width: sizes[0], 
-          height: sizes[1]
+    mainWindow = new BrowserWindow({
+        width: config.windowSize.width,
+        height: config.windowSize.height,
+        minWidth: DEV ? 0 : 640,
+        minHeight: DEV ? 0 : 864,
+        show: false,
+        center: true,
+        nativeWindowOpen: true,
+        thickFrame: true,
+        icon: path.join(__dirname + '/../../assets/images/ico.png'),
+        webPreferences: {
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
         }
-      });
-      
-      await ffmpeg.kill();
-		}
-		catch(error) {
-      throw error;		
-		}
-	});
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-  });
-
-  mainWindow.webContents.on('did-finish-load', () => {
-		mainWindow.webContents.send('message', {
-      command: 'config',
-      config: config,
-      ffmpegInstalled: ffmpegFound
     });
+
+    mainWindow.setMenu(null);
+    mainWindow.setMenuBarVisibility(false);
+    mainWindow.loadURL(`file://${__dirname}/../../assets/index.html`);
+
+    if(DEV) {
+        mainWindow.webContents.openDevTools();
+    }
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
+
+    mainWindow.on('resized', async () => {
+        try {
+            const [width, height] = mainWindow.getSize();   
+            await config.save({windowSize: { width, height }});
+            
+            await ffmpeg.kill();
+        }
+        catch(error) {
+            console.error(error);
+        }
+    })
+
+    mainWindow.on('close', async () => {
+        mainWindow.hide();
+    });
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('message', {
+            command: 'config',
+            config: config,
+            ffmpegInstalled: ffmpegFound
+        });
 	});
 }
 
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {    
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
 
 /**
@@ -122,92 +122,86 @@ app.on('activate', () => {
  */
 
 ipcMain.on('message', async (event, args) => {
-  switch(args.command) {
-    case 'getConfig': 
-      event.sender.send('message', {command: 'config', config: config});
-      break;
+    switch(args.command) {
+        case 'getConfig': 
+            event.sender.send('message', {command: 'config', config: config});
+            break;
 
-    case 'saveConfig':
-      try {
-        await config.save(args.config);
-        ffmpeg.acceleration = args.config.acceleration;
-        event.sender.send('message', {command: 'saved', config: config})
-      }
-      catch(err) {
-        console.error(err);
-        dialog.showMessageBox(
-          mainWindow, {
-            type: 'error', 
-            title: 'Error', 
-            message: err.message
-          }
-        );
-      }
-      break;
+        case 'saveConfig':
+            try {
+                await config.save(args.config);
+                ffmpeg.acceleration = args.config.acceleration;
+                event.sender.send('message', {command: 'saved', config: config})
+            }
+            catch(err) {
+                console.error(err);
+                dialog.showMessageBox(mainWindow, {
+                    type: 'error', 
+                    title: 'Error', 
+                    message: err.message
+                });
+            }
+            break;
 
-    case 'download':
-      let item = args.item;
-      item.path = config.folder;        
-      ffmpeg.download(item);
-      break;
+        case 'download':
+            let item = args.item;
+            item.path = config.folder;        
+            ffmpeg.download(item);
+            break;
 
-    case 'downloadFFmpeg':
-      try {             
-        const bins          = await downloadFFmpeg();
-        ffmpeg.bin.ffmpeg   = bins.ffmpeg;
-        ffmpeg.bin.ffprobe  = bins.ffprobe;
-        event.sender.send('message', {command: 'downloaded-FFmpeg'})
-      }
-      catch(err) {
-        console.error(err);
-        dialog.showMessageBox(
-          mainWindow, {
-            type: 'error', 
-            title: 'Error', 
-            message: err.message
-          }
-        );
-      }
-      break;
+        case 'downloadFFmpeg':
+            try {             
+                const bins          = await downloadFFmpeg();
+                ffmpeg.bin.ffmpeg   = bins.ffmpeg;
+                ffmpeg.bin.ffprobe  = bins.ffprobe;
+                event.sender.send('message', {command: 'downloaded-FFmpeg'})
+            }
+            catch(err) {
+                console.error(err);
+                dialog.showMessageBox(
+                    mainWindow, {
+                        type: 'error', 
+                        title: 'Error', 
+                        message: err.message
+                    }
+                );
+            }
+            break;
 
-    case 'select-path':
-      const path = await dialog.showOpenDialog(
-        mainWindow, 
-        {
-          defaultPath : config.folder, 
-          properties:["openDirectory"]
-        }
-      );
-      try {
-        if(path.filePaths[0] !== undefined) {
-          await config.save({folder: path.filePaths[0]});
-          event.sender.send('message', {command: 'saved-path', path: path.filePaths[0]})
-        }
-      }
-      catch(err) {
-        console.error(err);
-        dialog.showMessageBox(
-          mainWindow, {
-            type: 'error', 
-            title: 'Error', 
-            message: err.message
-          }
-        );
-      }   
-      break;
+        case 'select-path':
+            const path = await dialog.showOpenDialog(mainWindow, {
+                defaultPath : config.folder, 
+                properties:["openDirectory"]
+            });
 
-    case 'error':
-      console.error(args.error);
-      dialog.showMessageBox(
-        mainWindow, {
-          type: 'error', 
-          title: 'Error', 
-          message: args.error.message
-        }
-      );
-      break;
-  }
-})
+            try {
+                if(path.filePaths[0] !== undefined) {
+                    await config.save({folder: path.filePaths[0]});
+                    event.sender.send('message', {command: 'saved-path', path: path.filePaths[0]})
+                }
+            }
+            catch(err) {
+                console.error(err);
+                dialog.showMessageBox(
+                    mainWindow, {
+                        type: 'error', 
+                        title: 'Error', 
+                        message: err.message
+                    }
+                );
+            }   
+            break;
+
+        case 'error':
+            console.error(args.error);
+            dialog.showMessageBox(mainWindow, {
+                type: 'error', 
+                title: 'Error', 
+                message: args.error.message
+            });
+            break;
+    }
+});
 
 /**
  * FFmpeg eventhandler
@@ -222,42 +216,39 @@ ffmpeg.on('download-end', (info) => {
   }
 
   mainWindow.webContents.send('message', {command: 'downloaded', elId: info.elemId});
-})
+});
 
 ffmpeg.on('progress', (prog) => {
-  if(DEV) {
-    console.log(prog);  
-  }
+    if(DEV) {
+        console.log(prog);  
+    }
 
-  if(mainWindow) {
-    mainWindow.setProgressBar(prog.progress / 100);
-    mainWindow.webContents.send(
-      'message', 
-      {
-        command: 'progress', 
-        job: prog.job, 
-        percent: prog.progress,
-        elId: prog.elemId,
-        speed: prog.speed
-      }
-    );
+    if(mainWindow) {
+        mainWindow.setProgressBar(prog.progress / 100);
+        mainWindow.webContents.send('message', {
+            command: 'progress', 
+            job: prog.job, 
+            percent: prog.progress,
+            elId: prog.elemId,
+            speed: prog.speed
+        });
     }     
-})
+});
 
 ffmpeg.on('finished', (id) => {
-  if(DEV) {
-    console.log(id);  
-  }
+    if(DEV) {
+        console.log(id);  
+    }
 
-  mainWindow.setProgressBar(0);
-  mainWindow.webContents.send('message', {command: 'remove', elId: id}); 
-})
+    mainWindow.setProgressBar(0);
+    mainWindow.webContents.send('message', {command: 'remove', elId: id}); 
+});
 
 ffmpeg.on('error', (error) => {
-  if(DEV) {
-    console.error(error);  
-  }
+     if(DEV) {
+        console.error(error);  
+     }
 
-  mainWindow.setProgressBar(0);
-  mainWindow.webContents.send('message', {command: 'error', error: error.message});
-})
+    mainWindow.setProgressBar(0);
+    mainWindow.webContents.send('message', {command: 'error', error: error.message});
+});
