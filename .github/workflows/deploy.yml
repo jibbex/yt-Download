@@ -1,15 +1,18 @@
 name: deploy
 
-on: workflow_dispatch
-#    inputs:      
-#      version:
-#        required: true
-#        type: string
+concurrency: production
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ${{ matrix.os }}
-
+    environment: production
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -26,12 +29,13 @@ jobs:
       - name: Build/release Electron app        
         run: |
           yarn install
-          yarn make            
+          yarn make
+          mv out/ artifacts/${{ github.event.repository.name }}-${{ inputs.version }}
       
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
         with:
           name: ${{ github.event.repository.name }}
-          path: .artifacts/
+          path: artifacts/${{ github.event.repository.name }}-${{ inputs.version }}
         
         
