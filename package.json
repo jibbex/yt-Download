@@ -1,7 +1,7 @@
 {
   "name": "yt-download",
   "productName": "YT Download",
-  "version": "1.5.4",
+  "version": "1.5.41",
   "description": "Downloads videos from Youtube",
   "company": "YT Download",
   "main": "src/main/index.js",
@@ -56,7 +56,7 @@
             "productName": "yt-Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.5.4",
+            "version": "1.5.41",
             "depends": [
               "ffmpeg",
               "ffprobe"
@@ -77,7 +77,7 @@
             "productName": "yt-Download",
             "description": "Downloads videos from Youtube",
             "productDescription": "With YT Download you can download videos from Youtube in two easy steps. Just copy and paste the URL and click on the download button. Of course you can also search for a list of videos before you start the download.",
-            "version": "1.5.4",
+            "version": "1.5.41",
             "scripts": {
               "postinst": "./build/post_inst"
             },
