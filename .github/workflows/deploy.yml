@@ -25,11 +25,12 @@ jobs:
         run: |
           yarn install
           yarn make 
-          tar czvf ${{github.event.repository.name}}.tar.gz out/ 
+          mkdir -p dist
+          tar -czvf dist/${{github.event.repository.name}}.tar.gz out
       
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.1.0
         with:
           name: ${{github.event.repository.name}}.tar.gz
-        
+          path: dist/${{github.event.repository.name}}.tar.gz
         
