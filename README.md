@@ -9,22 +9,22 @@
 
 ### Table of contents
 - [YT Download](#yt-download)
-    + [Table of contents](#table-of-contents)
-    + [Node.js and Electron](#nodejs-and-electron)
-    + [FFmpeg](#ffmpeg)
-  * [Quickstart](#quickstart)
-    + [Initialize](#initialize)
-    + [Starting YT Download](#starting-yt-download)
-    + [Create package](#create-package)
-    + [Create installer](#create-installer)
-  * [Changelog](#changelog)
-    + [v1.5.4](#v154)
-    + [v1.5.32](#v1532)
-    + [v1.5.31](#v1531)
-    + [v1.5.3](#v153)
-    + [v1.5.1](#v151)
-    + [v1.4.0](#v140)
-    + [v1.0.0](#v100)
+    - [Table of contents](#table-of-contents)
+    - [Node.js and Electron](#nodejs-and-electron)
+    - [FFmpeg](#ffmpeg)
+  - [Quickstart](#quickstart)
+    - [Initialize](#initialize)
+    - [Starting YT Download](#starting-yt-download)
+    - [Create package](#create-package)
+    - [Create installer](#create-installer)
+  - [Changelog](#changelog)
+    - [v1.5.4](#v154)
+    - [v1.5.32](#v1532)
+    - [v1.5.31](#v1531)
+    - [v1.5.3](#v153)
+    - [v1.5.1](#v151)
+    - [v1.4.0](#v140)
+    - [v1.0.0](#v100)
 
 ### Node.js and Electron
 This Software uses [Node.js](https://nodejs.org/en/) and [Electron](https://electronjs.org/) to utilize JavaScript, HTML, and CSS for cross platform desktop apps.
@@ -88,7 +88,7 @@ yarn make
 ### v1.5.4
 
  * Update to Electron 17.0.1
- * Updated serveral further dependencies.
+ * Updated several further dependencies.
  * Precompiled binary packages for Linux are available again.
  * If the download directory doesn't exist, it will be created now.
  
