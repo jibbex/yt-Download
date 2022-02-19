@@ -24,13 +24,21 @@ jobs:
       - name: Build/release Electron app        
         run: |
           yarn install
-          yarn make 
-          mkdir -p dist
-          tar -czvf dist/${{github.event.repository.name}}.tar.gz out
+          yarn make
       
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.1.0
+      - name: SCP Files Action
+        uses: a-was/scp-files-action@v1
         with:
-          name: ${{github.event.repository.name}}.tar.gz
-          path: dist/${{github.event.repository.name}}.tar.gz
+          # Remote host
+          host: michm.de
+          # Remote host SSH port
+          port: 22
+          # Remote host user
+          user: mm
+          # SSH private key
+          key: ${{ secrets.KEY }}
+          # Repo directory path. Default whole repo
+          source: $(pwd)/
+          # Remote directory path. Default home directory
+          destination: ~/ytdl
         
