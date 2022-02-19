@@ -1,5 +1,10 @@
-const fs      = require('fs').promises;
-const { app } = require('electron');
+const { 
+    stat,
+    mkdir, 
+    writeFile, 
+    readFile
+ } = require('fs').promises;
+ 
 const path    = require('path');
 
 function removeSpecials(str) {
@@ -29,7 +34,7 @@ class Config {
     this.CONFIG_FILE  = FILE;
     
     Object.assign(this, {
-      folder: path.join(app.getPath('videos'), '/', 'yt-download'),
+      folder: path.join(require('electron').app.getPath('videos'), '/', 'yt-download'),
       convert: '',
       quality: 'high',
       acceleration: false,
@@ -53,7 +58,7 @@ class Config {
   
   async init() {
     try {
-      await fs.mkdir(this.DIRECTORY);        
+      await mkdir(this.DIRECTORY);        
     }
     catch(error) {
       if(error.code !== 'EEXIST') {
@@ -62,19 +67,19 @@ class Config {
     }
     finally {
       try {
-        const config = JSON.parse((await fs.readFile(this.CONFIG_FILE)));        
+        const config = JSON.parse((await readFile(this.CONFIG_FILE)));        
         Object.assign(this, config);        
       }
       catch(error) {
-        await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj, {flag: 'ax'}));        
+        await writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj, {flag: 'ax'}));        
       }
 
       try {
-        await fs.stat(this.folder);
+        await stat(this.folder);
       } 
       catch(error) {
         if(error.code === 'EEXIST') {
-            await fs.mkdir(this.folder, { recursive: true });
+            await mkdir(this.folder, { recursive: true });
         }   
       }
     }
@@ -84,7 +89,7 @@ class Config {
   
   async save(config) {
     Object.assign(this, config);
-    await fs.writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj));
+    await writeFile(this.CONFIG_FILE, JSON.stringify(this.Obj));
   }
 }
 

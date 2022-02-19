@@ -2,16 +2,10 @@ const {
   app, 
   BrowserWindow, 
   ipcMain, 
-  dialog
 } = require('electron');
 
-const { 
-  downloadFFmpeg, 
-  isFFmpegInstalled, 
-  ffmpeg
-} = require('./ffmpeg');
-
-const {config} = require('./../utils');
+const { ffmpeg } = require('./ffmpeg');
+const { config } = require('./../utils');
 const path = require('path');
 
 let mainWindow;
@@ -32,8 +26,8 @@ if(process.platform === 'win32') {
  *
  */
 
-const createWindow = async () => {
-    const ffmpegFound = (NO_FFMPEG) ? false : isFFmpegInstalled();  
+const createWindow = async () => {    
+    const ffmpegFound = (NO_FFMPEG) ? false : require('./ffmpeg').isFFmpegInstalled();  
 
     try {    
         await config.init();    
@@ -122,6 +116,8 @@ app.on('activate', () => {
  */
 
 ipcMain.on('message', async (event, args) => {
+    const { dialog } = require('electron');
+    
     switch(args.command) {
         case 'getConfig': 
             event.sender.send('message', {command: 'config', config: config});
@@ -150,7 +146,8 @@ ipcMain.on('message', async (event, args) => {
             break;
 
         case 'downloadFFmpeg':
-            try {             
+            try {   
+                const { downloadFFmpeg } = require('./ffmpeg.js');
                 const bins          = await downloadFFmpeg();
                 ffmpeg.bin.ffmpeg   = bins.ffmpeg;
                 ffmpeg.bin.ffprobe  = bins.ffprobe;

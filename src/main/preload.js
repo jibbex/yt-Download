@@ -1,9 +1,12 @@
 const { 
-  ipcRenderer, clipboard, remote, shell, contextBridge
+  ipcRenderer, 
+  clipboard, 
+  shell, 
+  contextBridge
 } = require('electron');
 
 const ytdl = require('ytdl-core');
-const {version} = require('../../package.json');
+const { version } = require('../../package.json');
 
 exports = contextBridge.exposeInMainWorld(
   'electron',
