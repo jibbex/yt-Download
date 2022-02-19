@@ -1,0 +1,38 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:      
+      version:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Build/release Electron app
+        run: |
+          yarn install
+          yarn make
+          
+      - uses: actions/checkout@v2
+      
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.0
+        with:
+          name: ${{ github.event.repository.name }}
+          path: .artifacts/${{ inputs.version }}/
