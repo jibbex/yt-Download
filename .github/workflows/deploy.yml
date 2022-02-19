@@ -38,7 +38,7 @@ jobs:
           # SSH private key
           key: ${{ secrets.KEY }}
           # Repo directory path. Default whole repo
-          source: $(pwd)/
+          source: 
           # Remote directory path. Default home directory
           destination: ~/ytdl
         
