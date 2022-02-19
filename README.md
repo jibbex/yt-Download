@@ -91,6 +91,7 @@ yarn make
  * Updated several further dependencies.
  * Precompiled binary packages for Linux are available again.
  * If the download directory doesn't exist, it will be created now.
+ * Loading of dependencies slighlty improved.
  
 ### v1.5.32
 
