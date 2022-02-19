@@ -18,7 +18,7 @@
     - [Create package](#create-package)
     - [Create installer](#create-installer)
   - [Changelog](#changelog)
-    - [v1.5.4](#v154)
+    - [v1.5.41](#v1541)
     - [v1.5.32](#v1532)
     - [v1.5.31](#v1531)
     - [v1.5.3](#v153)
@@ -85,7 +85,7 @@ yarn make
 
 ## Changelog
 
-### v1.5.4
+### v1.5.41
 
  * Update to Electron 17.0.1
  * Updated several further dependencies.
