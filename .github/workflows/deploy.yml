@@ -1,0 +1,44 @@
+name: deploy
+
+concurrency: production
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.os }}
+    environment: production
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Build/release Electron app        
+        run: |
+          yarn install
+          yarn make
+      
+      - name: SCP Files Action
+        uses: a-was/scp-files-action@v1
+        with:
+          # Remote host
+          host: michm.de
+          # Remote host SSH port
+          port: 22
+          # Remote host user
+          user: mm
+          # SSH private key
+          key: ${{ secrets.KEY }}
+          # Repo directory path. Default whole repo
+          source: 
+          # Remote directory path. Default home directory
+          destination: ~/ytdl
+        
