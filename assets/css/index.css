@@ -105,7 +105,7 @@ main {
   background: rgb(255,255,255);
 }
 .settings-modal .section {
-	margin: 20px 0 40px 0;
+	margin: 10px 0 10px 0;
   padding: 0;
 }
 h4.content {
@@ -364,6 +364,17 @@ h3 i, h5 i {
 }
 .section {
   width: 60%;
+}
+.card .row {  
+  margin-left: 2em !important; 
+  margin-right: 2em !important; 
+  padding: 5px 0 !important;
+}
+#modal-settings .input-field {
+  margin: 0;
+}
+#modal-settings .card {
+  margin: 3em 0;
 }
 @media only screen and (max-width: 1200px) {
   .section {
