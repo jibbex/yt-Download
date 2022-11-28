@@ -40,39 +40,67 @@
                   <input class="file-path" type="text">
                 </div>
               </div>              
-            </div>            
-            <div class="row">
-              <div class="input-field col s6">                
-                <select id="quality-select">
-                  <option value="high" selected>High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-                <label for="quality-select">Quality</label>
-              </div>
-              <div class="input-field col s6">                
-                <select id="convert-select">
-                  <option value="" selected>Disabled</option>
-                  <option value="mkv">MKV</option>
-                  <option value="webm">WEBM</option>
-                  <option value="mov">MOV</option>
-                  <option value="mpeg">MPEG</option>
-                </select>
-                <label for="convert-select">Converting</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-f col s12 center-align">
-                <label>
+            </div>           
+            <div class="card">
+              <div class="row"> 
+                <label style="padding: 1em;">
                   <input id="accel-checkbox" type="checkbox" />
                   <span>GPU accelerated encoding</span>
                 </label>
               </div>
-            </div>
-          </form>
-          <div class="divider"></div>       
-          <div class="bottom flex section">              
+              <div class="row">
+                <div class="input-field col s6">                
+                  <select id="quality-select">
+                    <option value="high" selected>High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                  <label for="quality-select">Quality</label>
+                </div>
+                <div class="input-field col s6">                
+                  <select id="convert-select">
+                    <option value="" selected>Disabled</option>
+                    <option value="mkv">MKV</option>
+                    <option value="webm">WEBM</option>
+                    <option value="mov">MOV</option>
+                    <option value="mpeg">MPEG</option>
+                  </select>
+                  <label for="convert-select">Converting</label>
+                </div>
+              </div>
+           </div>
+		   <!--
+            <div class="card">
+              <div class="row"> 
+                <label style="padding: 1em;">
+                  <input name="proxy-enabled" id="proxy-checkbox" type="checkbox" />
+                  <span>Proxy</span>
+                </label>
+              </div>
+              <div class="row">
+                  <div class="input-field col s4">                
+                    <input name="host" id="proxy-host" type="text">
+                    <label for="proxy-host">Host</label>
+                  </div>
+                  <div class="input-field col s2">                
+                    <input name="port" id="proxy-port" min="0" max="65535" type="number">
+                    <label for="proxy-port">Port</label>
+                  </div>
+                  <div class="input-field col s3">                
+                    <input name="user" id="proxy-user" type="text">
+                    <label for="proxy-user">User</label>
+                  </div>
+                  <div class="input-field col s3">                
+                    <input name="pass" id="proxy-pass" type="password">
+                    <label for="proxy-pass">Password</label>
+                  </div>              
+              </div>    
+            </div>      
+			-->
+          </form>              
+          <div class="bottom flex section">                          
             <div>
+              <div class="divider"></div>   
               <h5><i class="material-icons">info</i> YT Download stopped working?</h5>
               <p>
                 Youtube constantly updates their website. It is not so rare that the underlying code no longer works. In this case, updates will be provided relatively promptly.
@@ -93,7 +121,7 @@
       </div>
       <div id="modal-about" class="modal" style="max-width: 550px;">
         <div class="modal-content">
-          <h4><i class="material-icons">copyright</i> <span id="year">2019</span> Manfred Michaelis</h4>
+          <h5><i class="material-icons">copyright</i> 2019 - <span id="year">2019</span> Manfred Michaelis</h5>
           <p>
             Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
             files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
