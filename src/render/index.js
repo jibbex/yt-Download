@@ -61,8 +61,9 @@ const getElems = (query) => {
 /**
  * Helper function for animate.css
  *
- * @param {object} element
+ * @param {object|string} element
  * @param {string} animation
+ * @param {string} prefix
  */
  const animateCSS = (element, animation, prefix = 'animate__') => new Promise((resolve, reject) => {    
     const animationName = `${prefix}${animation}`;
