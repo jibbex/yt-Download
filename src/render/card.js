@@ -7,7 +7,7 @@ class Card {
     this.element.dataset.id = item.id;
     this.element.dataset.url = item.url;
     this.element.dataset.title = item.title;
-    this.element.id = new Date().getTime() + '-' + item.id;
+    this.element.id = new Date().getTime() + item.id;
     this.image = createEl('img');
   
     const thumbEl = createEl('div');
@@ -159,12 +159,12 @@ class Card {
     rmBtn.appendChild(rmIco);
   
     rmBtn.onclick = (ev) => {
-      animateCSS(this.element, 'zoomOut', () => {
+      animateCSS(this.element, 'zoomOut').then(() => {
         const parent = this.element.parentElement;
         parent.removeChild(this.element);
         if(parent.children.length < 1)
           getElem('#download-btn').classList.add('scale-out');
-      })
+      });
     }
   
     this.qSelEl.onchange = (ev) => {

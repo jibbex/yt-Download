@@ -62,23 +62,22 @@ const getElems = (query) => {
  * Helper function for animate.css
  *
  * @param {object} element
- * @param {string} animatonName
- * @param {function} callback
+ * @param {string} animation
  */
-
-const animateCSS  = (element, animationName, callback)  => {
+ const animateCSS = (element, animation, prefix = 'animate__') => new Promise((resolve, reject) => {    
+    const animationName = `${prefix}${animation}`;
     const node = typeof(element) === 'object' ? element : getElem(element);
-    node.classList.add('animated', animationName);
 
-    function handleAnimationEnd() {
-        node.classList.remove('animated', animationName);
-        node.removeEventListener('animationend', handleAnimationEnd);
+    node.classList.add(`${prefix}animated`, animationName);
 
-        if (typeof callback === 'function') callback();
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove('animated', animationName);
+      resolve('Animation ended');
     }
 
-    node.addEventListener('animationend', handleAnimationEnd)
-}
+    node.addEventListener('animationend', handleAnimationEnd, {once: true});
+ });
 
 /**
  * clipboard polling
@@ -110,6 +109,12 @@ getElem('#add-btn').addEventListener('mouseleave', pulseActivate);
 getElem('#modal-ffmpeg a').addEventListener('click', linkClickHandler);
 getElem('#btn-download-ffmpeg').addEventListener('click', downloadFFmpegBtnClickHandler);
 getElem('#download-update-btn').addEventListener('click', downloadUpdateBtnClickHandler);
+// getElem('#proxy-checkbox').addEventListener('click', proxyChkBoxClickHandler);
+// getElem('#proxy-checkbox').addEventListener('click', changeProxyHandler);
+// getElem('#proxy-user').addEventListener('change', changeProxyHandler);
+// getElem('#proxy-pass').addEventListener('change', changeProxyHandler);
+// getElem('#proxy-port').addEventListener('change', changeProxyHandler);
+// getElem('#proxy-host').addEventListener('change', changeProxyHandler);
 
 /**
  * ---
@@ -172,7 +177,11 @@ ipc('message', (args) => {
       Card.prototype.convert = config.convert;
 
       getElem('.file-path').value = config.folder;
-      getElem('#accel-checkbox').checked = config.acceleration    
+      getElem('#accel-checkbox').checked = config.acceleration;
+      // getElem('#proxy-checkbox').checked = config.proxy.enabled;
+      // getElem('#proxy-host').value = config.proxy.host;
+      // getElem('#proxy-port').value = config.proxy.port;
+      // getElem('#proxy-user').value = config.proxy.user;
 
       selectOption(getElem('#quality-select'), config.quality);
       selectOption(getElem('#convert-select'), config.convert);
@@ -191,21 +200,21 @@ ipc('message', (args) => {
       Card.prototype.convert = config.convert;
       break;
 
-    case 'remove':            
-      progresses.delete(args.elId);
-
-      animateCSS(elem, 'zoomOut', () => {
+    case 'remove':              
+      animateCSS(elem, 'zoomOut').then(() => {
         const parent = getElem('#download-container');
         parent.removeChild(elem);
         dlBtn.disabled = false;
         getElem('#add-btn').disabled = false;
         getElem('#add-btn').classList.remove('hidden');
+        
         dlBtn.classList.remove('deactive');
         if(dlBtn.classList.contains('scale-out') && getElem('#download-container').children.length > 0) {
           dlBtn.classList.remove('scale-out');
         }
         download();
-      })
+      });
+        
       break;
 
     case 'progress':

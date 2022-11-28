@@ -63,28 +63,33 @@ const events = {
   changeSelectQualityHandler: function() {
     config.quality = this.options[this.selectedIndex].value;
     Card.prototype.quality = config.quality;
-    send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config});
   },
   changeSelectConvertHandler: function() {
     config.convert = this.options[this.selectedIndex].value;
     Card.prototype.convert = config.convert;
-    send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config});
   },
   changeAccelerationHandler: function() {
     config.acceleration = this.checked;
-    send({command: 'saveConfig', config: config});
+    send({command: 'saveConfig', config});
   },
-  inputWorkerHandler: function() {
-    let worker = this.value;
-
-    if(worker > 10 || worker < 1) {
-      this.value = worker = worker > 10 ? 10 : worker < 1 && 1;
+  changeProxyHandler: function({srcElement}) {
+    const { name } = srcElement;
+    if (!config.proxy) {
+      config.proxy = {};
     }
-
-    config.dlWorker = worker;
-
-    send({command: 'saveConfig', config: config});
-  },  
+    
+    if (name === 'host' || name === 'port' || name === 'user' ||name === 'pass') {
+      config.proxy[name] = srcElement.value;
+    } else if (name === 'proxy-enabled') {      
+      config.proxy.enabled = srcElement.checked;
+    } else {
+      return;
+    }
+    
+    send({command: 'saveConfig', config })
+  },
   download: () => {
     const dlContainer = getElem('#download-container');
 
@@ -141,7 +146,7 @@ const events = {
       notify('All files downloaded.');
     }
   },  
-  linkClickHandler: function(ev) {
+  linkClickHandler: (ev) => {
     ev.preventDefault();
     shellOpen(this.href);
   },
@@ -157,7 +162,18 @@ const events = {
 
     send({command: 'downloadFFmpeg'});
   },
-  clickWorkerHandler: function() {return this.select()},
+  clickWorkerHandler: () => {return this.select()},
   downloadBtnClickHandler: () => download(),  
-  downloadUpdateBtnClickHandler: () => shellOpen('https://ytdl.michm.de')  
+  downloadUpdateBtnClickHandler: () => shellOpen('https://jibbex.github.io/yt-Download/'),
+  proxyChkBoxClickHandler: ({srcElement}) => {
+    const host = getElem('#proxy-host');
+    const port = getElem('#proxy-port');
+    const user = getElem('#proxy-user');
+    const pass = getElem('#proxy-pass');
+
+    host.disabled = !srcElement.checked;
+    port.disabled = !srcElement.checked;
+    user.disabled = !srcElement.checked;
+    pass.disabled = !srcElement.checked;
+  }
 }
