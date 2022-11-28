@@ -18,6 +18,7 @@
     - [Create package](#create-package)
     - [Create installer](#create-installer)
   - [Changelog](#changelog)
+    - [v1.5.42](#v1542)
     - [v1.5.41](#v1541)
     - [v1.5.32](#v1532)
     - [v1.5.31](#v1531)
@@ -84,6 +85,11 @@ yarn make
 ```
 
 ## Changelog
+
+### v1.5.42
+
+* Fixed an issue that prevented animation of elements
+* Fixed an issue caused by a deprecated [ytdl-core](https://github.com/fent/node-ytdl-core) version
 
 ### v1.5.41
 
