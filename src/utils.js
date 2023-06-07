@@ -22,22 +22,31 @@ function removeSpecials(str) {
 
 class Config {
   constructor() {
-    const DIR       = path.join(
-                        (process.platform === 'win32' 
-                            ? process.env.USERPROFILE 
-                            : process.env['HOME'])
-                        ,'/.yt-download'
-                      );
-    const FILE        = path.join(DIR, '/conf.json');
-    
-    this.DIRECTORY    = DIR;
-    this.CONFIG_FILE  = FILE;
+    const proxy = process.env.http_proxy
+     != undefined ?? new URL(process.env.http_proxy);
+    const DIR = path.join(
+                (process.platform === 'win32' 
+                    ? process.env.USERPROFILE 
+                    : process.env['HOME'])
+                ,'/.yt-download'
+              );
+    const FILE = path.join(DIR, '/conf.json');
+
+    this.DIRECTORY = DIR;
+    this.CONFIG_FILE = FILE;
     
     Object.assign(this, {
       folder: path.join(require('electron').app.getPath('videos'), '/', 'yt-download'),
       convert: '',
       quality: 'high',
       acceleration: false,
+      proxy: {
+        enabled: process.env.http_proxy != undefined,
+        host: proxy?.host || '',
+        port: proxy?.port || '',
+        user: proxy?.user || '',
+        pass: proxy?.pass || '',
+      },
       windowSize: {
         width:816,
         height:864

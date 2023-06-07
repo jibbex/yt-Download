@@ -110,18 +110,18 @@ getElem('#add-btn').addEventListener('mouseleave', pulseActivate);
 getElem('#modal-ffmpeg a').addEventListener('click', linkClickHandler);
 getElem('#btn-download-ffmpeg').addEventListener('click', downloadFFmpegBtnClickHandler);
 getElem('#download-update-btn').addEventListener('click', downloadUpdateBtnClickHandler);
-// getElem('#proxy-checkbox').addEventListener('click', proxyChkBoxClickHandler);
-// getElem('#proxy-checkbox').addEventListener('click', changeProxyHandler);
-// getElem('#proxy-user').addEventListener('change', changeProxyHandler);
-// getElem('#proxy-pass').addEventListener('change', changeProxyHandler);
-// getElem('#proxy-port').addEventListener('change', changeProxyHandler);
-// getElem('#proxy-host').addEventListener('change', changeProxyHandler);
+getElem('#proxy-checkbox').addEventListener('click', proxyChkBoxClickHandler);
+getElem('#proxy-checkbox').addEventListener('click', changeProxyHandler);
+getElem('#proxy-user').addEventListener('change', changeProxyHandler);
+getElem('#proxy-pass').addEventListener('change', changeProxyHandler);
+getElem('#proxy-port').addEventListener('change', changeProxyHandler);
+getElem('#proxy-host').addEventListener('change', changeProxyHandler);
 
 /**
  * ---
  */
 
-getElem('#year').innerHTML = '2021';
+getElem('#year').innerHTML = '2023';
 getElem('#version').innerHTML = version;
 
 /**
@@ -179,10 +179,10 @@ ipc('message', (args) => {
 
       getElem('.file-path').value = config.folder;
       getElem('#accel-checkbox').checked = config.acceleration;
-      // getElem('#proxy-checkbox').checked = config.proxy.enabled;
-      // getElem('#proxy-host').value = config.proxy.host;
-      // getElem('#proxy-port').value = config.proxy.port;
-      // getElem('#proxy-user').value = config.proxy.user;
+      getElem('#proxy-checkbox').checked = config.proxy?.enabled;
+      getElem('#proxy-host').value = config.proxy?.host;
+      getElem('#proxy-port').value = config.proxy?.port;
+      getElem('#proxy-user').value = config.proxy?.user;
 
       selectOption(getElem('#quality-select'), config.quality);
       selectOption(getElem('#convert-select'), config.convert);

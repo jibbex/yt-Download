@@ -4,9 +4,10 @@ const {
   ipcMain, 
 } = require('electron');
 
-const { ffmpeg } = require('./ffmpeg');
-const { config } = require('./../utils');
-const path = require('path');
+const { ffmpeg }    = require('./ffmpeg');
+const { config }    = require('./../utils');
+const path          = require('path');
+const globalTunnel  = require('global-tunnel-ng');
 
 let mainWindow;
 
@@ -16,6 +17,17 @@ if(require('electron-squirrel-startup')) {
 
 const DEV       = process.argv.includes('dev');
 const NO_FFMPEG = process.argv.includes('no-ffmpeg');
+
+function initProxy() {
+    if (config.proxy.enabled) {
+        const authSeperator = config.proxy.user?.length > 0 && config.proxy.pass?.length > 0 ? ':' : '';
+        globalTunnel.initialize({
+            host: config.proxy.host,
+            port: config.proxy.port,
+            proxyAuth: `${config.proxy.user}${authSeperator}${config.proxy.pass}`,
+        });
+    }
+}
 
 if(process.platform === 'win32') {
   app.setAppUserModelId('YT Download');
@@ -32,6 +44,7 @@ const createWindow = async () => {
     try {    
         await config.init();    
         ffmpeg.acceleration = config.acceleration || false;
+        initProxy();
     }
     catch(error) { 
         console.error(error);
@@ -44,7 +57,7 @@ const createWindow = async () => {
         minHeight: DEV ? 0 : 864,
         show: false,
         center: true,
-        nativeWindowOpen: true,
+        nativeWindowOpen: true,        
         thickFrame: true,
         icon: path.join(__dirname + '/../../assets/images/ico.png'),
         webPreferences: {
@@ -120,14 +133,23 @@ ipcMain.on('message', async (event, args) => {
     
     switch(args.command) {
         case 'getConfig': 
-            event.sender.send('message', {command: 'config', config: config});
+            event.sender.send('message', {command: 'config', config});
             break;
 
         case 'saveConfig':
             try {
+                console.log(args.config);
                 await config.save(args.config);
                 ffmpeg.acceleration = args.config.acceleration;
-                event.sender.send('message', {command: 'saved', config: config})
+                
+                if (config.proxy.enabled) {
+                    globalTunnel.end();
+                    initProxy();
+                } else {
+                    globalTunnel.end();
+                }
+
+                event.sender.send('message', {command: 'saved', config})
             }
             catch(err) {
                 console.error(err);
