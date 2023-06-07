@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/jibbex/yt-Download/master/assets/images/icon-512.png" align="right" width="164" height="164">
 
 # YT Download
-<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/jibbex/yt-Download/build?12" align="right">
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jibbex/yt-Download/build.yml?branch=main" align="right">
 <img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/jibbex/yt-Download" align="right">
 <img alt="GitHub package.json dependency version (dev dep on branch)" src="https://img.shields.io/github/package-json/dependency-version/jibbex/yt-Download/dev/electron" align="right">
 
