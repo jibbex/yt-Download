@@ -95,7 +95,7 @@
     "global-tunnel-ng": "^2.7.1",
     "materialize-css": ">=1.0.0",
     "normalize-url": ">=4.5.1",
-    "progressbar.js": ">=1.1.0",
+    "progressbar.js": ">=1.1.1",
     "tree-kill": ">=1.2.2",
     "ytdl-core": ">=4.11.2"
   },
